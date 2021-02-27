@@ -3,22 +3,30 @@ using Discord.WebSocket;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using DiscordBot.Logging;
+using DiscordBot.Commands;
+using Discord.Commands;
 
 namespace DiscordBot
 {
 	public class Program
 	{
 		private DiscordSocketClient client;
+		private LoggingService loggingService;
+		private CommandHandler commandHandler;
+		private CommandService commandService;
 
 		public static void Main(string[] args)
 			=> new Program().MainAsync().GetAwaiter().GetResult();
 
 		public async Task MainAsync()
 		{
-			var config = new DiscordSocketConfig { MessageCacheSize = 100 };
-			client = new DiscordSocketClient(config);
+			client = new DiscordSocketClient(new DiscordSocketConfig { MessageCacheSize = 100 });
+			commandService = new CommandService();
+			loggingService = new LoggingService(client, commandService);
+			commandHandler = new CommandHandler(client, commandService);
 
-			client.Log += Log;
+			await commandHandler.InstallCommandsAsync();
 
 			await client.LoginAsync(TokenType.Bot, File.ReadAllText("C:/Users/GABRIEL/Desktop/Lang Files/C# Files/DiscordBot/DiscordBot/Token.txt"));
 			await client.StartAsync();
@@ -41,12 +49,6 @@ namespace DiscordBot
 			Console.WriteLine($"({msg.Channel}, {msg.Author}) -> {msg.Content}");
 			return Task.CompletedTask;
         }
-
-        private Task Log(LogMessage msg)
-		{
-			Console.WriteLine(msg.ToString());
-			return Task.CompletedTask;
-		}
 
 		private async Task MessageUpdated(Cacheable<IMessage, ulong> before, SocketMessage after, ISocketMessageChannel channel)
 		{
