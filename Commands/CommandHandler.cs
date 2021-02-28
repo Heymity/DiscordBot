@@ -2,7 +2,6 @@
 using Discord.WebSocket;
 using System.Reflection;
 using System.Threading.Tasks;
-using DiscordBot.Modules;
 
 namespace DiscordBot.Commands
 {
