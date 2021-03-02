@@ -10,7 +10,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Modules\Calculator\" />
     <Folder Include="Modules\Poll\" />
     <Folder Include="Modules\Trivia\" />
   </ItemGroup>

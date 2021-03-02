@@ -12,6 +12,7 @@ namespace DiscordBot.Modules
 		public int counter = 0;
 
 		[Command("say")]
+		[Alias("echo")]
 		[Summary("Echoes a message.")]
 		public Task SayAsync([Remainder][Summary("The text to echo")] string echo)
 			=> ReplyAsync(echo);

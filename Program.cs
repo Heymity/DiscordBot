@@ -36,7 +36,7 @@ namespace DiscordBot
 			client.Ready += () =>
 			{
 				Console.WriteLine("Bot is connected!");
-				client.SetGameAsync("os testes pela janela");
+				client.SetGameAsync("o henrique pela janela");
 				return Task.CompletedTask;
 			};
 
