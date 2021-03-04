@@ -6,12 +6,18 @@ namespace DiscordBot.Utilities.Calculator
 {
     public class Expression
     {
-        public string expression;
+        public string expression = "";
         public List<Symbol> parsedExpression;
 
         public Expression(string expression)
         {
             this.expression = expression;
+        }
+
+        public Expression(params Symbol[] symbols)
+        {
+            parsedExpression = new List<Symbol>(symbols);
+            parsedExpression.ForEach((Symbol s) => expression += s.value);
         }
 
         public List<Symbol> Parse() => parsedExpression = ExpressionParser.Parse(this);
@@ -24,6 +30,8 @@ namespace DiscordBot.Utilities.Calculator
 
     public struct Symbol
     {
+        public static readonly Symbol Empty = new Symbol();
+
         public SymbolType type;
         public string value;
         public Expression nestedExpression;
@@ -32,6 +40,13 @@ namespace DiscordBot.Utilities.Calculator
         {
             this.type = type;
             this.value = value;
+            this.nestedExpression = nestedExpression;
+        }
+
+        public Symbol(SymbolType type, Expression nestedExpression)
+        {
+            this.type = type;
+            this.value = nestedExpression.expression;
             this.nestedExpression = nestedExpression;
         }
 
