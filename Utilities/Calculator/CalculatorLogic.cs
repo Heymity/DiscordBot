@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DiscordBot.Utilities
+namespace DiscordBot.Utilities.Calculator
 {
     class CalculatorLogic
     {
@@ -53,7 +53,11 @@ namespace DiscordBot.Utilities
 
         public static double Root(double number, double root = 2) => Math.Pow(number, 1 / root);
 
-
+        public static double SolveExpression(string expression)
+        {
+            Expression exp = new Expression(expression);
+            return 0;
+        }
 
     }
         

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DiscordBot.Logging;
 using DiscordBot.Commands;
 using Discord.Commands;
+using DiscordBot.Utilities.Calculator;
 
 namespace DiscordBot
 {
@@ -39,6 +40,9 @@ namespace DiscordBot
 				client.SetGameAsync("o henrique pela janela");
 				return Task.CompletedTask;
 			};
+
+			Expression exp = new Expression("((5 + 7) * 2)/7^2+2*11");
+			ExpressionParser.Parse(exp);
 
 			// Block this task until the program is closed.
 			await Task.Delay(-1);
