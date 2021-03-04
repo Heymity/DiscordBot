@@ -56,36 +56,7 @@ namespace DiscordBot.Utilities.Calculator
                 parsedExp.RemoveRange(i - 2, 3);
                 parsedExp.Insert(i - 2, s.GetValueOrDefault());
             }
-
-            /** for (int i = 0; i < parsedExp.Count; i++)
-             {
-                 if (parsedExp[i].type == SymbolType.Operator)
-                 {
-                     Symbol pre = Symbol.Empty;
-                     Symbol pos = Symbol.Empty;
-
-                     if (i == 0) pre = new Symbol(SymbolType.Number, "0");
-                     else
-                     {
-                         if (parsedExp[i - 1].type != SymbolType.Operator) pre = parsedExp[i - 1];
-                     }
-                     if (i == parsedExp.Count - 1) throw new Exception("operator at end of expression");
-                     else
-                     {
-                         if (parsedExp[i + 1].type != SymbolType.Operator) pos = parsedExp[i + 1];
-                     }
-
-                     Expression newExpresion = new Expression(pre, parsedExp[i], pos);
-                     Symbol newSymbol = new Symbol(SymbolType.Expression, newExpresion);
-
-                     i++;
-                     parsedExp.RemoveRange(startIndex, i);
-                     parsedExp.Add(newSymbol);
-                     startIndex = i;
-                 } 
-             }*/
-
-
+         
             return parsedExp;
         }
 
@@ -121,7 +92,11 @@ namespace DiscordBot.Utilities.Calculator
         {
             i = 0;
             if (parsedExp.Count <= 3) return null;
-            for (i = 0; i < parsedExp.Count; i++)
+
+            int? indexToSearch = FindIndexToSearch(parsedExp);
+            if (indexToSearch == null) return null;
+
+            for (i = indexToSearch.GetValueOrDefault(); i < parsedExp.Count; i++)
             {
                 if (parsedExp[i].type == SymbolType.Operator)
                 {
@@ -142,12 +117,25 @@ namespace DiscordBot.Utilities.Calculator
                     Expression newExpresion = new Expression(pre, parsedExp[i], pos);
                     i++;
                     return new Symbol(SymbolType.Expression, newExpresion);
-
-                    //parsedExp.RemoveRange(startIndex, i);
-                    //parsedExp.Add(newSymbol);
-                    //startIndex = i;
                 }
             }
+            return null;
+        }
+
+        static int? FindIndexToSearch(List<Symbol> list)
+        {
+            List<int> multiplicationIndexes = new List<int>();
+            List<int> additiveIndexes = new List<int>();
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i].type != SymbolType.Operator) continue;
+                if (list[i].value == "^") return i;
+                if (list[i].value == "*" || list[i].value == "/") multiplicationIndexes.Add(i);
+                if (list[i].value == "+" || list[i].value == "-") additiveIndexes.Add(i);
+            }
+
+            if (multiplicationIndexes.Count > 0) return multiplicationIndexes[0];
+            if (additiveIndexes.Count > 0) return additiveIndexes[0];
             return null;
         }
     }
