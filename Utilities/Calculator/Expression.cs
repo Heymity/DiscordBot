@@ -6,51 +6,40 @@ namespace DiscordBot.Utilities.Calculator
 {
     public class Expression
     {
-        public string expression = "";
-        public List<Symbol> parsedExpression;
+        public static readonly Expression Empty = new Expression("");
+
+        public SymbolType type;
+        public string Value { get; private set; } // Same as Expression here because I am lazy to change in the other files 
+
+        public List<Expression> parsedExpression;
 
         public Expression(string expression)
         {
-            this.expression = expression;
+            this.Value = expression;
+            type = SymbolType.Expression;
         }
 
-        public Expression(params Symbol[] symbols)
+        public Expression(SymbolType type, params Expression[] symbols)
         {
-            parsedExpression = new List<Symbol>(symbols);
-            parsedExpression.ForEach((Symbol s) => expression += s.value);
+            this.type = type;
+            parsedExpression = new List<Expression>(symbols);
+            parsedExpression.ForEach((Expression s) => Value += s.Value);
         }
 
-        public List<Symbol> Parse() => parsedExpression = ExpressionParser.Parse(this);
+        public Expression(SymbolType type, string expression)
+        {
+            this.type = type;
+            this.Value = expression;
+        }
+
+        public List<Expression> Parse() => parsedExpression = ExpressionParser.Parse(this);
 
         public void Evaluate()
         {
 
         }
-    }
 
-    public struct Symbol
-    {
-        public static readonly Symbol Empty = new Symbol();
-
-        public SymbolType type;
-        public string value;
-        public Expression nestedExpression;
-
-        public Symbol(SymbolType type, string value, Expression nestedExpression = null)
-        {
-            this.type = type;
-            this.value = value;
-            this.nestedExpression = nestedExpression;
-        }
-
-        public Symbol(SymbolType type, Expression nestedExpression)
-        {
-            this.type = type;
-            this.value = nestedExpression.expression;
-            this.nestedExpression = nestedExpression;
-        }
-
-        public void SetValue(string value) => this.value = value;
+        public void SetValue(string value) => Value = value;
     }
 
     public enum SymbolType
