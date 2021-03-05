@@ -1,23 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace DiscordBot.Utilities.Calculator
 {
     static class ExpressionParser
     {
-        public static List<char> groupChars = new List<char>() { '(', ')', '[', ']', '{', '}' };
-        public static List<char> openingGroupChars = new List<char>() { '(', '[', '{' };
-        public static List<char> closingGroupChars = new List<char>() { ')', ']', '}' };
+        public static readonly List<char> openingGroupChars = new List<char>() { '(', '[', '{' };
+        public static readonly List<char> closingGroupChars = new List<char>() { ')', ']', '}' };
 
         public static List<Expression> Parse(Expression expression)
         {
             List<Expression> parsedExp = new List<Expression>();
             string exp = expression.Value;
+
+            /// Remove all spaces
             exp = Regex.Replace(exp, @"\s+", "");
 
             string tmp = "";
+            /// Adds the value to the tmp variable if its not an operator or a opening group char,
+            /// When it finds a operator it adds to the list the tmp variable
+            /// If it is a opening group char it will get the nested expression
+            /// If it is a operator it will add the operator
             for (int i = 0; i < exp.Length; i++)
             {
                 if (!char.IsDigit(exp[i]))
@@ -38,16 +42,21 @@ namespace DiscordBot.Utilities.Calculator
 
                 tmp += exp[i];
             }
+            /// If the expression ends with a number it need to be added after the loop, 
+            /// since in the for loop it only adds numbers when a operator is found after
             if (tmp != "")
                 parsedExp.Add(new Expression(SymbolType.Number, tmp));
 
+            /// If the list has only three items, it is already in its most simplified state
             if (parsedExp.Count <= 3) return parsedExp;
 
+            /// This will interate the list and reduce all items to its simplest form, that is
+            /// having only three items (value operator value) 
+            /// The result will be a tree of nested expressions.
             Expression s = Expression.Empty;
             while (s != null)
             {
-                int i = 0;
-                s = ReduceParse(parsedExp, out i);
+                s = ReduceParse(parsedExp, out int i);
 
                 if (s == null) break;
 
@@ -61,27 +70,27 @@ namespace DiscordBot.Utilities.Calculator
         static Expression GetNestedExpressions(string exp, ref int index)
         {
             index++;
+            /// This is the index after the opening group char, and nestedIndex count how many 
+            /// nested groups there are, so it closes on the right index
             int startIndex = index;
             int nestedIndex = 0;
             for(_ = 0; index < exp.Length; index++)
             {
-                if (/*index > startIndex && */openingGroupChars.Contains(exp[index]))
+                if (openingGroupChars.Contains(exp[index]))
                     nestedIndex++;
                 
                 if (closingGroupChars.Contains(exp[index]))
                 {
                     if (nestedIndex <= 0)
-                    {
-                        //index++;
                         break;
-                    }
+
                     nestedIndex--;
                 }
             }
+            /// Create a new expression with the content between the opening and closing group chars and then parse it
             var substring = exp.Substring(startIndex, index - 1);
             Expression expression = new Expression(substring);
             expression.Parse();
-            //Expression s = new Expression(SymbolType.Expression, substring, expression);
 
             return expression;
         }
@@ -112,14 +121,14 @@ namespace DiscordBot.Utilities.Calculator
                         if (parsedExp[i + 1].type != SymbolType.Operator) pos = parsedExp[i + 1];
                     }
 
-                    Expression newExpresion = new Expression(SymbolType.Expression, pre, parsedExp[i], pos); // Should be merged
-                    i++;
-                    return newExpresion;
+                    //i++;
+                    return new Expression(SymbolType.Expression, pre, parsedExp[i++], pos);
                 }
             }
             return null;
         }
 
+        // Could be optimized by running it only one time and then storing the values in just one list, and get the index from that
         static int? FindIndexToSearch(List<Expression> list)
         {
             List<int> multiplicationIndexes = new List<int>();

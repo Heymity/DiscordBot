@@ -12,8 +12,8 @@ namespace DiscordBot.Utilities.Calculator
             for (int i = 0; i < symbols.Count; i++)
             {
                 if (symbols[i].type == SymbolType.Expression) 
-                    symbols[i].SetValue(Evaluate(symbols[i]));
-
+                    symbols[i].SetValue(Evaluate(symbols[i]), SymbolType.Number);
+                
             }
 
             return "";

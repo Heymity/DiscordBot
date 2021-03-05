@@ -39,7 +39,12 @@ namespace DiscordBot.Utilities.Calculator
 
         }
 
-        public void SetValue(string value) => Value = value;
+        public void SetValue(string newValue, SymbolType newType)
+        {
+            type = newType;
+            Value = newValue;
+            parsedExpression = null;
+        }
     }
 
     public enum SymbolType
