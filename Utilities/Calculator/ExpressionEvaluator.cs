@@ -8,12 +8,12 @@ namespace DiscordBot.Utilities.Calculator
     {
         public static string Evaluate(Expression exp)
         {
-            List<Symbol> symbols = exp.parsedExpression;
+            List<Expression> symbols = exp.parsedExpression;
             for (int i = 0; i < symbols.Count; i++)
             {
                 if (symbols[i].type == SymbolType.Expression) 
-                    symbols[i].SetValue(Evaluate(symbols[i].nestedExpression));
-
+                    symbols[i].SetValue(Evaluate(symbols[i]), SymbolType.Number);
+                
             }
 
             return "";

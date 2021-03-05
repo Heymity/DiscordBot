@@ -1,36 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace DiscordBot.Utilities.Calculator
 {
     static class ExpressionParser
     {
-        public static List<char> groupChars = new List<char>() { '(', ')', '[', ']', '{', '}' };
-        public static List<char> openingGroupChars = new List<char>() { '(', '[', '{' };
-        public static List<char> closingGroupChars = new List<char>() { ')', ']', '}' };
+        public static readonly List<char> openingGroupChars = new List<char>() { '(', '[', '{' };
+        public static readonly List<char> closingGroupChars = new List<char>() { ')', ']', '}' };
 
-        public static List<Symbol> Parse(Expression expression)
+        public static List<Expression> Parse(Expression expression)
         {
-            List<Symbol> parsedExp = new List<Symbol>();
-            string exp = expression.expression;
+            List<Expression> parsedExp = new List<Expression>();
+            string exp = expression.Value;
+
+            /// Remove all spaces
             exp = Regex.Replace(exp, @"\s+", "");
 
             string tmp = "";
+            /// Adds the value to the tmp variable if its not an operator or a opening group char,
+            /// When it finds a operator it adds to the list the tmp variable
+            /// If it is a opening group char it will get the nested expression
+            /// If it is a operator it will add the operator
             for (int i = 0; i < exp.Length; i++)
             {
                 if (!char.IsDigit(exp[i]))
                 {
                     if (tmp != "") 
-                        parsedExp.Add(new Symbol(SymbolType.Number, tmp));
+                        parsedExp.Add(new Expression(SymbolType.Number, tmp));
                     tmp = "";
 
-                    Symbol symbol;
+                    Expression symbol;
                     if (openingGroupChars.Contains(exp[i]))
                         symbol = GetNestedExpressions(exp, ref i);
                     else
-                        symbol = new Symbol(SymbolType.Operator, exp[i].ToString());
+                        symbol = new Expression(SymbolType.Operator, exp[i].ToString());
 
                     parsedExp.Add(symbol);
                     continue;
@@ -38,57 +42,60 @@ namespace DiscordBot.Utilities.Calculator
 
                 tmp += exp[i];
             }
+            /// If the expression ends with a number it need to be added after the loop, 
+            /// since in the for loop it only adds numbers when a operator is found after
             if (tmp != "")
-                parsedExp.Add(new Symbol(SymbolType.Number, tmp));
+                parsedExp.Add(new Expression(SymbolType.Number, tmp));
 
+            /// If the list has only three items, it is already in its most simplified state
             if (parsedExp.Count <= 3) return parsedExp;
 
-            List<Symbol> reducedParse = new List<Symbol>();
-
-            Symbol? s = Symbol.Empty;
+            /// This will interate the list and reduce all items to its simplest form, that is
+            /// having only three items (value operator value) 
+            /// The result will be a tree of nested expressions.
+            Expression s = Expression.Empty;
             while (s != null)
             {
-                int i = 0;
-                s = ReduceParse(parsedExp, out i);
+                s = ReduceParse(parsedExp, out int i);
 
                 if (s == null) break;
 
                 parsedExp.RemoveRange(i - 2, 3);
-                parsedExp.Insert(i - 2, s.GetValueOrDefault());
+                parsedExp.Insert(i - 2, s);
             }
          
             return parsedExp;
         }
 
-        static Symbol GetNestedExpressions(string exp, ref int index)
+        static Expression GetNestedExpressions(string exp, ref int index)
         {
             index++;
+            /// This is the index after the opening group char, and nestedIndex count how many 
+            /// nested groups there are, so it closes on the right index
             int startIndex = index;
             int nestedIndex = 0;
             for(_ = 0; index < exp.Length; index++)
             {
-                if (/*index > startIndex && */openingGroupChars.Contains(exp[index]))
+                if (openingGroupChars.Contains(exp[index]))
                     nestedIndex++;
                 
                 if (closingGroupChars.Contains(exp[index]))
                 {
                     if (nestedIndex <= 0)
-                    {
-                        //index++;
                         break;
-                    }
+
                     nestedIndex--;
                 }
             }
+            /// Create a new expression with the content between the opening and closing group chars and then parse it
             var substring = exp.Substring(startIndex, index - 1);
             Expression expression = new Expression(substring);
             expression.Parse();
-            Symbol s = new Symbol(SymbolType.Expression, substring, expression);
 
-            return s;
+            return expression;
         }
 
-        static Symbol? ReduceParse(List<Symbol> parsedExp, out int i)
+        static Expression ReduceParse(List<Expression> parsedExp, out int i)
         {
             i = 0;
             if (parsedExp.Count <= 3) return null;
@@ -100,10 +107,10 @@ namespace DiscordBot.Utilities.Calculator
             {
                 if (parsedExp[i].type == SymbolType.Operator)
                 {
-                    Symbol pre = Symbol.Empty;
-                    Symbol pos = Symbol.Empty;
+                    Expression pre = Expression.Empty;
+                    Expression pos = Expression.Empty;
 
-                    if (i == 0) pre = new Symbol(SymbolType.Number, "0");
+                    if (i == 0) pre = new Expression(SymbolType.Number, "0");
                     else
                     {
                         if (parsedExp[i - 1].type != SymbolType.Operator) pre = parsedExp[i - 1];
@@ -114,24 +121,24 @@ namespace DiscordBot.Utilities.Calculator
                         if (parsedExp[i + 1].type != SymbolType.Operator) pos = parsedExp[i + 1];
                     }
 
-                    Expression newExpresion = new Expression(pre, parsedExp[i], pos);
-                    i++;
-                    return new Symbol(SymbolType.Expression, newExpresion);
+                    //i++;
+                    return new Expression(SymbolType.Expression, pre, parsedExp[i++], pos);
                 }
             }
             return null;
         }
 
-        static int? FindIndexToSearch(List<Symbol> list)
+        // Could be optimized by running it only one time and then storing the values in just one list, and get the index from that
+        static int? FindIndexToSearch(List<Expression> list)
         {
             List<int> multiplicationIndexes = new List<int>();
             List<int> additiveIndexes = new List<int>();
             for (int i = 0; i < list.Count; i++)
             {
                 if (list[i].type != SymbolType.Operator) continue;
-                if (list[i].value == "^") return i;
-                if (list[i].value == "*" || list[i].value == "/") multiplicationIndexes.Add(i);
-                if (list[i].value == "+" || list[i].value == "-") additiveIndexes.Add(i);
+                if (list[i].Value == "^") return i;
+                if (list[i].Value == "*" || list[i].Value == "/") multiplicationIndexes.Add(i);
+                if (list[i].Value == "+" || list[i].Value == "-") additiveIndexes.Add(i);
             }
 
             if (multiplicationIndexes.Count > 0) return multiplicationIndexes[0];
