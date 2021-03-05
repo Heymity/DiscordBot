@@ -9,7 +9,7 @@ namespace DiscordBot.Utilities.Calculator
         public static readonly Expression Empty = new Expression("");
 
         public SymbolType type;
-        public string Value { get; private set; } // Same as Expression here because I am lazy to change in the other files 
+        public string Value { get; private set; }
 
         public List<Expression> parsedExpression;
 
@@ -34,10 +34,7 @@ namespace DiscordBot.Utilities.Calculator
 
         public List<Expression> Parse() => parsedExpression = ExpressionParser.Parse(this);
 
-        public void Evaluate()
-        {
-
-        }
+        public string Evaluate() => Value = ExpressionEvaluator.Evaluate(this);
 
         public void SetValue(string newValue, SymbolType newType)
         {

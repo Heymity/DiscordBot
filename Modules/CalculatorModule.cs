@@ -11,7 +11,7 @@ namespace DiscordBot.Modules
         public Task ExpresionCalculator([Remainder][Summary("The Expression")] string expression)
         {
             ReplyAsync($"Calculating... {expression}");
-            CalculatorLogic.SolveExpression(expression);
+            ReplyAsync(CalculatorLogic.SolveExpression(expression));
             return Task.CompletedTask;
         }
         

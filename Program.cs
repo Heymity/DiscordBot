@@ -42,8 +42,8 @@ namespace DiscordBot
 			};
 
 			Expression exp = new Expression("((5 + 7) * 2)/7^2+2*11");
-			ExpressionParser.Parse(exp);
-
+			exp.Parse();
+			ExpressionEvaluator.Evaluate(exp);
 			// Block this task until the program is closed.
 			await Task.Delay(-1);
 		}

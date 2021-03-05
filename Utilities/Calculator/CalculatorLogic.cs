@@ -53,10 +53,20 @@ namespace DiscordBot.Utilities.Calculator
 
         public static double Root(double number, double root = 2) => Math.Pow(number, 1 / root);
 
-        public static double SolveExpression(string expression)
+        public static string SolveExpression(string expression)
         {
             Expression exp = new Expression(expression);
-            return 0;
+            exp.Parse();
+            exp.Evaluate();
+            return exp.Value;
+        }
+
+        public static double SolveExpressionReturnDouble(string expression)
+        {
+            Expression exp = new Expression(expression);
+            exp.Parse();
+            exp.Evaluate();
+            return double.Parse(exp.Value);
         }
 
     }

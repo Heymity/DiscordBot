@@ -24,7 +24,11 @@ namespace DiscordBot.Utilities.Calculator
             /// If it is a operator it will add the operator
             for (int i = 0; i < exp.Length; i++)
             {
-                if (!char.IsDigit(exp[i]))
+                if (char.IsDigit(exp[i]) || exp[i] == ',' || exp[i] == '.')
+                {
+                    tmp += exp[i];
+                }
+                else
                 {
                     if (tmp != "") 
                         parsedExp.Add(new Expression(SymbolType.Number, tmp));
@@ -39,8 +43,6 @@ namespace DiscordBot.Utilities.Calculator
                     parsedExp.Add(symbol);
                     continue;
                 }
-
-                tmp += exp[i];
             }
             /// If the expression ends with a number it need to be added after the loop, 
             /// since in the for loop it only adds numbers when a operator is found after
@@ -88,7 +90,7 @@ namespace DiscordBot.Utilities.Calculator
                 }
             }
             /// Create a new expression with the content between the opening and closing group chars and then parse it
-            var substring = exp.Substring(startIndex, index - 1);
+            var substring = exp.Substring(startIndex, index - startIndex);
             Expression expression = new Expression(substring);
             expression.Parse();
 
