@@ -1,4 +1,7 @@
-﻿using Discord;
+﻿#define DEBUG
+//#undef DEBUG
+
+using Discord;
 using Discord.WebSocket;
 using System;
 using System.IO;
@@ -6,7 +9,6 @@ using System.Threading.Tasks;
 using DiscordBot.Logging;
 using DiscordBot.Commands;
 using Discord.Commands;
-using DiscordBot.Utilities.Calculator;
 
 namespace DiscordBot
 {
@@ -31,9 +33,11 @@ namespace DiscordBot
 
 			await client.LoginAsync(TokenType.Bot, File.ReadAllText("C:/Users/GABRIEL/Desktop/Lang Files/C# Files/DiscordBot/DiscordBot/Token.txt"));
 			await client.StartAsync();
-			
+
+#if DEBUG
 			client.MessageUpdated += MessageUpdated;
             client.MessageReceived += MessageReceived;
+#endif
 			client.Ready += () =>
 			{
 				Console.WriteLine("Bot is connected!");
@@ -45,6 +49,7 @@ namespace DiscordBot
 			await Task.Delay(-1);
 		}
 
+#if DEBUG
 		private Task MessageReceived(SocketMessage msg)
 		{
 			Console.WriteLine($"({msg.Channel}, {msg.Author}) -> {msg.Content}");
@@ -57,5 +62,6 @@ namespace DiscordBot
 			var message = await before.GetOrDownloadAsync();
 			Console.WriteLine($"({message.Channel}, {message.Author}): {message} -> {after}");
 		}
+#endif
 	}
 }
