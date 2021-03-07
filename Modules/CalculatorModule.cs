@@ -1,6 +1,8 @@
 ﻿using Discord.Commands;
 using System.Threading.Tasks;
 using DiscordBot.Utilities.Calculator;
+using Discord;
+using System;
 
 namespace DiscordBot.Modules
 {
@@ -8,10 +10,19 @@ namespace DiscordBot.Modules
     public class CalculatorModule : ModuleBase<SocketCommandContext>
     {
         [Command]
+        [Alias("expre", "expression", "e")]
         public Task ExpresionCalculator([Remainder][Summary("The Expression")] string expression)
         {
-            ReplyAsync($"Calculating... {expression}");
-            ReplyAsync(CalculatorLogic.SolveExpression(expression));
+            try
+            {
+                var a = ReplyAsync("Calculating...").Result;
+
+                a.ModifyAsync((MessageProperties prop) => prop.Content = CalculatorLogic.SolveExpression(expression));
+            }
+            catch(Exception e)
+            {
+                ReplyAsync($"Error: {e.Message}");
+            }
             return Task.CompletedTask;
         }
         

@@ -80,8 +80,7 @@ namespace DiscordBot.Utilities.Calculator
             {
                 if (openingGroupChars.Contains(exp[index]))
                     nestedIndex++;
-                
-                if (closingGroupChars.Contains(exp[index]))
+                else if (closingGroupChars.Contains(exp[index]))
                 {
                     if (nestedIndex <= 0)
                         break;
@@ -90,8 +89,7 @@ namespace DiscordBot.Utilities.Calculator
                 }
             }
             /// Create a new expression with the content between the opening and closing group chars and then parse it
-            var substring = exp.Substring(startIndex, index - startIndex);
-            Expression expression = new Expression(substring);
+            Expression expression = new Expression(exp[startIndex..index]);
             expression.Parse();
 
             return expression;
@@ -109,21 +107,22 @@ namespace DiscordBot.Utilities.Calculator
             {
                 if (parsedExp[i].type == SymbolType.Operator)
                 {
-                    Expression pre = Expression.Empty;
-                    Expression pos = Expression.Empty;
-
+                    Expression pre;
                     if (i == 0) pre = new Expression(SymbolType.Number, "0");
                     else
                     {
                         if (parsedExp[i - 1].type != SymbolType.Operator) pre = parsedExp[i - 1];
+                        else throw new Exception("Operator placed next to another one");
                     }
-                    if (i == parsedExp.Count - 1) throw new Exception("operator at end of expression");
+
+                    Expression pos;
+                    if (i == parsedExp.Count - 1) throw new Exception("Operator placed at end of expression");
                     else
                     {
                         if (parsedExp[i + 1].type != SymbolType.Operator) pos = parsedExp[i + 1];
+                        else throw new Exception("Operator placed next to another one");
                     }
 
-                    //i++;
                     return new Expression(SymbolType.Expression, pre, parsedExp[i++], pos);
                 }
             }
@@ -139,7 +138,7 @@ namespace DiscordBot.Utilities.Calculator
             {
                 if (list[i].type != SymbolType.Operator) continue;
                 if (list[i].Value == "^") return i;
-                if (list[i].Value == "*" || list[i].Value == "/") multiplicationIndexes.Add(i);
+                if (list[i].Value == "*" || list[i].Value == "/" || list[i].Value == "%") multiplicationIndexes.Add(i);
                 if (list[i].Value == "+" || list[i].Value == "-") additiveIndexes.Add(i);
             }
 

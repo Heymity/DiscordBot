@@ -16,15 +16,15 @@ namespace DiscordBot.Utilities.Calculator
             }
 
             if (exp.parsedExpression.Count == 1) return exp.parsedExpression[0].Value;
-            if (exp.parsedExpression.Count != 3) throw new Exception("There probally is something wrong with your sintaxe, maybe a wring opening or closing bracket? or a lonely operator");
-            var h = HandleSolve(exp.parsedExpression[1], (exp.parsedExpression[0], exp.parsedExpression[2]));
+            if (exp.parsedExpression.Count != 3) throw new Exception("There probally is something wrong with your sintaxe, maybe a wring opening or closing bracket? or a lonely operator. If it seems to be all correct, try to specify the most your expression by adding brackets and using -1 * value instead of just -value");
+            var h = HandleSolve(exp.parsedExpression[0], exp.parsedExpression[1], exp.parsedExpression[2]);
             return h;
         }
 
-        static string HandleSolve(Expression opt, (Expression first, Expression second) values)
+        static string HandleSolve(Expression first, Expression opt, Expression second)
         {
-            double firstNum = double.Parse(values.first.Value.Replace('.', ','));
-            double secondNum = double.Parse(values.second.Value.Replace('.', ','));
+            double firstNum = double.Parse(first.Value.Replace('.', ','));
+            double secondNum = double.Parse(second.Value.Replace('.', ','));
             return opt.Value switch
             {
                 "^" => Math.Pow(firstNum, secondNum).ToString(),
@@ -33,7 +33,7 @@ namespace DiscordBot.Utilities.Calculator
                 "+" => (firstNum + secondNum).ToString(),
                 "-" => (firstNum - secondNum).ToString(),
                 "%" => (firstNum % secondNum).ToString(),
-                _ => throw new Exception("Operator not reconized"),
+                _ => throw new Exception($"Operator \"{opt.Value}\" not reconized"),
             };
         }
     }
