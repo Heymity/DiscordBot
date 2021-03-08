@@ -33,6 +33,7 @@ namespace DiscordBot.Utilities.Calculator
                 "+" => (firstNum + secondNum).ToString(),
                 "-" => (firstNum - secondNum).ToString(),
                 "%" => (firstNum % secondNum).ToString(),
+                "log" => Math.Log(secondNum, newBase: firstNum).ToString(),
                 _ => throw new Exception($"Operator \"{opt.Value}\" not reconized"),
             };
         }

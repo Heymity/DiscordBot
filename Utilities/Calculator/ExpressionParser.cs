@@ -30,16 +30,40 @@ namespace DiscordBot.Utilities.Calculator
                 }
                 else
                 {
+                    Expression symbol;
+                    /// In case a opening bracket is found it creates a new expression
+                    if (openingGroupChars.Contains(exp[i]))
+                    {
+                        symbol = GetNestedExpressions(exp, ref i);
+                        /// In case there is something before it that is not a operator, or its just a operator without a number, it puts a * operator
+                        if (tmp != "")
+                        {
+                            if (tmp == "-" || tmp == "+") tmp += "1";
+                            symbol = new Expression(SymbolType.Expression, 
+                                                    new Expression(SymbolType.Number, tmp), 
+                                                    new Expression(SymbolType.Operator, "*"), 
+                                                    symbol);
+
+                            tmp = "";
+                            parsedExp.Add(symbol);
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        /// This makes it possible to use negative numbers
+                        if (tmp == "" && (exp[i] == '-' || exp[i] == '+'))
+                        {
+                            tmp += exp[i];
+                            continue;
+                        }
+                        symbol = new Expression(SymbolType.Operator, exp[i].ToString());
+                    }
+
                     if (tmp != "") 
                         parsedExp.Add(new Expression(SymbolType.Number, tmp));
+
                     tmp = "";
-
-                    Expression symbol;
-                    if (openingGroupChars.Contains(exp[i]))
-                        symbol = GetNestedExpressions(exp, ref i);
-                    else
-                        symbol = new Expression(SymbolType.Operator, exp[i].ToString());
-
                     parsedExp.Add(symbol);
                     continue;
                 }
