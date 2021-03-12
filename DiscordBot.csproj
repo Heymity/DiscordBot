@@ -10,6 +10,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Modules\Music\" />
+    <Folder Include="Modules\Video\" />
     <Folder Include="Modules\Poll\" />
     <Folder Include="Modules\Trivia\" />
   </ItemGroup>

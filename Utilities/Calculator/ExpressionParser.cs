@@ -39,10 +39,7 @@ namespace DiscordBot.Utilities.Calculator
                         if (tmp != "")
                         {
                             if (tmp == "-" || tmp == "+") tmp += "1";
-                            symbol = new Expression(SymbolType.Expression, 
-                                                    new Expression(SymbolType.Number, tmp), 
-                                                    new Expression(SymbolType.Operator, "*"), 
-                                                    symbol);
+                            symbol = new Expression(SymbolType.Expression, new Expression(SymbolType.Number, tmp), new Expression(SymbolType.Operator, "*"), symbol);
 
                             tmp = "";
                             parsedExp.Add(symbol);
@@ -161,7 +158,7 @@ namespace DiscordBot.Utilities.Calculator
             for (int i = 0; i < list.Count; i++)
             {
                 if (list[i].type != SymbolType.Operator) continue;
-                if (list[i].Value == "^") return i;
+                if (list[i].Value == "^" || list[i].Value == "log") return i;
                 if (list[i].Value == "*" || list[i].Value == "/" || list[i].Value == "%") multiplicationIndexes.Add(i);
                 if (list[i].Value == "+" || list[i].Value == "-") additiveIndexes.Add(i);
             }

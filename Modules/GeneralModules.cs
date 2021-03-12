@@ -9,7 +9,6 @@ namespace DiscordBot.Modules
 {
     public class GeneralModules : ModuleBase<SocketCommandContext>
     {
-		public int counter = 0;
 
 		[Command("say")]
 		[Alias("echo")]
