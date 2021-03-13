@@ -4,6 +4,7 @@ using Discord.WebSocket;
 using DiscordBot.Utilities.Trivia;
 using System;
 using System.Collections.Generic;
+using System.Timers;
 using System.Threading.Tasks;
 
 namespace DiscordBot.Modules
@@ -43,22 +44,28 @@ namespace DiscordBot.Modules
                 var templateReactions = new Emoji[] { new Emoji("🇦"), new Emoji("🇧"), new Emoji("🇨"), new Emoji("🇩"), new Emoji("🇪") };
                 List<Emoji> reactions = new List<Emoji>(templateReactions[0..question.GetAnswersLenght()]);
 
-                var r = ReplyAsync(embed: embed.Build()).Result;
+                var r = base.ReplyAsync(embed: embed.Build()).Result;
                 await r.AddReactionsAsync(reactions.ToArray()).ConfigureAwait(false);
 
+                var correctIndex = question.GetCorrectAnswerIndex();
+                async Task Handler(Cacheable<IUserMessage, ulong> message, ISocketMessageChannel channel, SocketReaction reaction) => await Task.Run(() => ReactionAdded(message, channel, reaction, reactions[correctIndex], r));
 
-                async Task MediatorFunc(Cacheable<IUserMessage, ulong> message, ISocketMessageChannel channel, SocketReaction reaction)
-                   => await Task.Run(() => ReactionAdded(message, channel, reaction, reactions[0], r));
+                Context.Client.ReactionAdded += Handler;
 
-                Context.Client.ReactionAdded += MediatorFunc;
-
-                Task task = new Task(async () =>
+                Timer t = new Timer
                 {
-                    await ReplyAsync("hi");
-                });
-                task.Wait(TimeSpan.FromSeconds(10));
+                    Interval = 10000, 
+                    AutoReset = false 
+                };
 
-                Context.Client.ReactionAdded -= MediatorFunc;
+                t.Elapsed += new ElapsedEventHandler((object sender, ElapsedEventArgs e) => 
+                { 
+                    ReplyAsync("Time Out!"); 
+                    Context.Client.ReactionAdded -= Handler; 
+                });
+
+                t.Start();
+
             });
         }
 
@@ -66,11 +73,11 @@ namespace DiscordBot.Modules
         {
             await Task.Run(async () =>
             {
-                 if ((message.Value?.Id ?? referenceMessage.Id - 1) != referenceMessage.Id) await Task.CompletedTask;
-                 if (reaction.User.Value.IsBot) await Task.CompletedTask;
+                if ((message.Value?.Id ?? referenceMessage.Id - 1) != referenceMessage.Id) return;
+                if (reaction.User.Value.IsBot) return;
 
-                 if (reaction.Emote.Name == correctReaction.Name) await ReplyAsync(reaction.User.Value.Username);
-                 await Task.CompletedTask;
+                if (reaction.Emote.Name == correctReaction.Name) await ReplyAsync(reaction.User.Value.Username);
+                return;
             });
         }
     }

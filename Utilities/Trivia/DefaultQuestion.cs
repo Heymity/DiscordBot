@@ -26,5 +26,15 @@ namespace DiscordBot.Utilities.Trivia
         public string GetQuestion() => Content;
 
         public bool IsCorrect(DefaultAnswer ans) => ans.IsCorrect;
+
+        public int GetCorrectAnswerIndex()
+        {
+            for (int i = 0; i < Answers.Count; i++)
+            {
+                if (Answers[i].IsCorrect) return i;
+            }
+
+            return -1;
+        }
     }
 }
