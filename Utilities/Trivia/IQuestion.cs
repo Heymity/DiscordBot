@@ -10,7 +10,9 @@ namespace DiscordBot.Utilities.Trivia
 
         T GetCorrectAnswer();
 
-        Span<T> GetAnswers();
+        IReadOnlyList<T> GetAnswers();
+
+        int GetAnswersLenght();
 
         bool IsCorrect(T ans);
     }
