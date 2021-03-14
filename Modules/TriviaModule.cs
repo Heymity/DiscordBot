@@ -15,7 +15,6 @@ namespace DiscordBot.Modules
         [Command] 
         public async Task Trivia([Remainder][Summary("The theme")] string theme = "")
         {
-
             await Task.Run(async () =>
             {
                 List<DefaultAnswer> tempAns = new List<DefaultAnswer>() 
@@ -59,14 +58,20 @@ namespace DiscordBot.Modules
                 };
 
                 t.Elapsed += new ElapsedEventHandler((object sender, ElapsedEventArgs e) => 
-                { 
-                    ReplyAsync("Time Out!"); 
-                    Context.Client.ReactionAdded -= Handler; 
+                {
+                    WhenTimeout(sender, e);
+                    Context.Client.ReactionAdded -= Handler;
+                    t.Dispose();
                 });
 
                 t.Start();
 
             });
+        }
+
+        void WhenTimeout(object sender, ElapsedEventArgs e)
+        {
+            ReplyAsync("Time Out!");
         }
 
         private async Task ReactionAdded(Cacheable<IUserMessage, ulong> message, ISocketMessageChannel channel, SocketReaction reaction, Emoji correctReaction, IUserMessage referenceMessage)
