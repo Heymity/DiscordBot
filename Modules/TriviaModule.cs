@@ -26,7 +26,7 @@ namespace DiscordBot.Modules
                     new DefaultAnswer("The E answer", false),
                 };
                 IQuestion<DefaultAnswer> question = new DefaultQuestion("This is the Question", tempAns);
-                if (question.GetAnswersLenght() > 5) throw new Exception("The Question can only have up to 5 answers because I dind't find a way to generalize the emoji creation");
+                if (question.GetAnswersLenght() > 5) throw new Exception("The Question can only have up to 5 answers because I dind't find a way to generalize the emoji creation ;)");
 
                 EmbedBuilder embed = new EmbedBuilder()
                 {
@@ -43,11 +43,14 @@ namespace DiscordBot.Modules
                 var templateReactions = new Emoji[] { new Emoji("🇦"), new Emoji("🇧"), new Emoji("🇨"), new Emoji("🇩"), new Emoji("🇪") };
                 List<Emoji> reactions = new List<Emoji>(templateReactions[0..question.GetAnswersLenght()]);
 
+
                 var r = base.ReplyAsync(embed: embed.Build()).Result;
                 await r.AddReactionsAsync(reactions.ToArray()).ConfigureAwait(false);
+                
+                TriviaController triviaController = new TriviaController(r.Channel.Id);
 
                 var correctIndex = question.GetCorrectAnswerIndex();
-                async Task Handler(Cacheable<IUserMessage, ulong> message, ISocketMessageChannel channel, SocketReaction reaction) => await Task.Run(() => ReactionAdded(message, channel, reaction, reactions[correctIndex], r));
+                async Task Handler(Cacheable<IUserMessage, ulong> message, ISocketMessageChannel channel, SocketReaction reaction) => await Task.Run(() => ReactionAdded(message, channel, reaction, r, ref triviaController));
 
                 Context.Client.ReactionAdded += Handler;
 
@@ -59,31 +62,32 @@ namespace DiscordBot.Modules
 
                 t.Elapsed += new ElapsedEventHandler((object sender, ElapsedEventArgs e) => 
                 {
-                    WhenTimeout(sender, e);
                     Context.Client.ReactionAdded -= Handler;
                     t.Dispose();
+                    WhenTimeout(sender, e, triviaController, reactions[correctIndex]);
                 });
-
                 t.Start();
 
             });
         }
 
-        void WhenTimeout(object sender, ElapsedEventArgs e)
+        void WhenTimeout(object sender, ElapsedEventArgs e, TriviaController controller, Emoji correctAns)
         {
             ReplyAsync("Time Out!");
+            var tmp = controller.GetCorrectUsers(correctAns.Name);
+            for(int i = 0; i < tmp.Count; i++)
+            {
+                ReplyAsync(tmp[i].ToString());
+            }
         }
 
-        private async Task ReactionAdded(Cacheable<IUserMessage, ulong> message, ISocketMessageChannel channel, SocketReaction reaction, Emoji correctReaction, IUserMessage referenceMessage)
+        private void ReactionAdded(Cacheable<IUserMessage, ulong> message, ISocketMessageChannel channel, SocketReaction reaction, IUserMessage referenceMessage, ref TriviaController triviaController)
         {
-            await Task.Run(async () =>
-            {
-                if ((message.Value?.Id ?? referenceMessage.Id - 1) != referenceMessage.Id) return;
-                if (reaction.User.Value.IsBot) return;
+            if ((message.Value?.Id ?? referenceMessage.Id - 1) != referenceMessage.Id) return;
+            if (reaction.User.Value.IsBot) return;
 
-                if (reaction.Emote.Name == correctReaction.Name) await ReplyAsync(reaction.User.Value.Username);
-                return;
-            });
+            ReplyAsync(reaction.User.Value.Username);
+            triviaController.AnswerAdded(reaction.User.Value, reaction.Emote.Name);
         }
     }
 }
