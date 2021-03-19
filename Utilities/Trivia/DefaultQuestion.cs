@@ -1,31 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace DiscordBot.Utilities.Trivia
 {
-    class DefaultQuestion : IQuestion<DefaultAnswer>
+    [System.Serializable]
+    class DefaultQuestion : IQuestion<BaseAnswer>
     {
-
         public string Content {get; private set;}
-        public List<DefaultAnswer> Answers { get; private set; }
+        public List<BaseAnswer> Answers { get; private set; }
 
-        public DefaultQuestion(string content, List<DefaultAnswer> answers)
+        public DefaultQuestion(string content, List<BaseAnswer> answers)
         {
             Content = content;
             Answers = answers;
         }
 
-        public IReadOnlyList<DefaultAnswer> GetAnswers() => Answers;
+        public IReadOnlyList<BaseAnswer> GetAnswers() => Answers;
 
         public int GetAnswersLenght() => Answers.Count;
 
-        public DefaultAnswer GetCorrectAnswer() => Answers.Where((DefaultAnswer ans) => ans.IsCorrect == true).FirstOrDefault();
+        public BaseAnswer GetCorrectAnswer() => Answers.Where((BaseAnswer ans) => ans.IsCorrect == true).FirstOrDefault();
 
         public string GetQuestion() => Content;
 
-        public bool IsCorrect(DefaultAnswer ans) => ans.IsCorrect;
+        public bool IsCorrect(BaseAnswer ans) => ans.IsCorrect;
 
         public int GetCorrectAnswerIndex()
         {

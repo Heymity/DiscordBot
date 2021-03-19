@@ -17,15 +17,15 @@ namespace DiscordBot.Modules
         {
             await Task.Run(async () =>
             {
-                List<DefaultAnswer> tempAns = new List<DefaultAnswer>() 
+                List<BaseAnswer> tempAns = new List<BaseAnswer>() 
                 { 
-                    new DefaultAnswer("The A answer", false),
-                    new DefaultAnswer("The B answer", false),
-                    new DefaultAnswer("The C answer", false),
-                    new DefaultAnswer("The D answer", true),
-                    new DefaultAnswer("The E answer", false),
+                    new BaseAnswer("The A answer", false),
+                    new BaseAnswer("The B answer", false),
+                    new BaseAnswer("The C answer", false),
+                    new BaseAnswer("The D answer", true),
+                    new BaseAnswer("The E answer", false),
                 };
-                IQuestion<DefaultAnswer> question = new DefaultQuestion("This is the Question", tempAns);
+                IQuestion<BaseAnswer> question = new DefaultQuestion("This is the Question", tempAns);
                 if (question.GetAnswersLenght() > 5) throw new Exception("The Question can only have up to 5 answers because I dind't find a way to generalize the emoji creation ;)");
 
                 EmbedBuilder embed = new EmbedBuilder()
@@ -81,6 +81,7 @@ namespace DiscordBot.Modules
             }
         }
 
+        // Move to controller, then add the controller func to the event.
         private void ReactionAdded(Cacheable<IUserMessage, ulong> message, ISocketMessageChannel channel, SocketReaction reaction, IUserMessage referenceMessage, ref TriviaController triviaController)
         {
             if ((message.Value?.Id ?? referenceMessage.Id - 1) != referenceMessage.Id) return;

@@ -14,6 +14,11 @@ namespace DiscordBot
 {
 	public class Program
 	{
+#if DEFAULTDIR
+		private const string TOKEN_DIRECTORY = "C:/Users/GABRIEL/Desktop/Lang Files/C# Files/DiscordBot/DiscordBot/Token.txt";
+#else
+		private const string TOKEN_DIRECTORY = "";
+#endif
 		private DiscordSocketClient client;
 		private LoggingService loggingService;
 		private CommandHandler commandHandler;
@@ -31,7 +36,7 @@ namespace DiscordBot
 
 			await commandHandler.InstallCommandsAsync();
 
-			await client.LoginAsync(TokenType.Bot, File.ReadAllText("C:/Users/GABRIEL/Desktop/Lang Files/C# Files/DiscordBot/DiscordBot/Token.txt"));
+			await client.LoginAsync(TokenType.Bot, File.ReadAllText(TOKEN_DIRECTORY));
 			await client.StartAsync();
 
 #if DEBUG
