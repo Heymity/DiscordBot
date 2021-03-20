@@ -25,34 +25,17 @@ namespace DiscordBot.Modules
                     new BaseAnswer("The D answer", true),
                     new BaseAnswer("The E answer", false),
                 };
-                IQuestion<BaseAnswer> question = new DefaultQuestion("This is the Question", tempAns);
+                IQuestion<BaseAnswer> question = new BaseQuestion("This is the Question", tempAns);
                 if (question.GetAnswersLenght() > 5) throw new Exception("The Question can only have up to 5 answers because I dind't find a way to generalize the emoji creation ;)");
 
-                EmbedBuilder embed = new EmbedBuilder()
-                {
-                    Title = question.GetQuestion()
-                };
+                TriviaController<BaseAnswer> triviaController = new TriviaController<BaseAnswer>(question);
 
-                string[] ansLetters = new string[] { "A:", "B:", "C:", "D:", "E:" };
-                var ans = question.GetAnswers();
-                for(int i = 0; i < ans.Count; i++)
-                {
-                    embed.AddField(ansLetters[i], ans[i].Content, false);
-                }
+                var r = base.ReplyAsync(embed: triviaController.GetQuestionEmbed()).Result;
 
-                var templateReactions = new Emoji[] { new Emoji("🇦"), new Emoji("🇧"), new Emoji("🇨"), new Emoji("🇩"), new Emoji("🇪") };
-                List<Emoji> reactions = new List<Emoji>(templateReactions[0..question.GetAnswersLenght()]);
+                triviaController.SetMessageAndChannel(r);
+                await triviaController.HandleReactionsAsync();                              
 
-
-                var r = base.ReplyAsync(embed: embed.Build()).Result;
-                await r.AddReactionsAsync(reactions.ToArray()).ConfigureAwait(false);
-                
-                TriviaController triviaController = new TriviaController(r.Channel.Id);
-
-                var correctIndex = question.GetCorrectAnswerIndex();
-                async Task Handler(Cacheable<IUserMessage, ulong> message, ISocketMessageChannel channel, SocketReaction reaction) => await Task.Run(() => ReactionAdded(message, channel, reaction, r, ref triviaController));
-
-                Context.Client.ReactionAdded += Handler;
+                Context.Client.ReactionAdded += triviaController.HandleReactionAdded;
 
                 Timer t = new Timer
                 {
@@ -60,35 +43,15 @@ namespace DiscordBot.Modules
                     AutoReset = false 
                 };
 
-                t.Elapsed += new ElapsedEventHandler((object sender, ElapsedEventArgs e) => 
+                t.Elapsed += new ElapsedEventHandler(async (object sender, ElapsedEventArgs e) => 
                 {
-                    Context.Client.ReactionAdded -= Handler;
+                    Context.Client.ReactionAdded -= triviaController.HandleReactionAdded;
                     t.Dispose();
-                    WhenTimeout(sender, e, triviaController, reactions[correctIndex]);
+                    await ReplyAsync(embed: triviaController.WhenTimeout());
                 });
                 t.Start();
 
             });
-        }
-
-        void WhenTimeout(object sender, ElapsedEventArgs e, TriviaController controller, Emoji correctAns)
-        {
-            ReplyAsync("Time Out!");
-            var tmp = controller.GetCorrectUsers(correctAns.Name);
-            for(int i = 0; i < tmp.Count; i++)
-            {
-                ReplyAsync(tmp[i].ToString());
-            }
-        }
-
-        // Move to controller, then add the controller func to the event.
-        private void ReactionAdded(Cacheable<IUserMessage, ulong> message, ISocketMessageChannel channel, SocketReaction reaction, IUserMessage referenceMessage, ref TriviaController triviaController)
-        {
-            if ((message.Value?.Id ?? referenceMessage.Id - 1) != referenceMessage.Id) return;
-            if (reaction.User.Value.IsBot) return;
-
-            ReplyAsync(reaction.User.Value.Username);
-            triviaController.AnswerAdded(reaction.User.Value, reaction.Emote.Name);
-        }
+        }  
     }
 }

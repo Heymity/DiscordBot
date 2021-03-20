@@ -4,12 +4,12 @@ using System.Linq;
 namespace DiscordBot.Utilities.Trivia
 {
     [System.Serializable]
-    class DefaultQuestion : IQuestion<BaseAnswer>
+    public class BaseQuestion : IQuestion<BaseAnswer>
     {
         public string Content {get; private set;}
         public List<BaseAnswer> Answers { get; private set; }
 
-        public DefaultQuestion(string content, List<BaseAnswer> answers)
+        public BaseQuestion(string content, List<BaseAnswer> answers)
         {
             Content = content;
             Answers = answers;

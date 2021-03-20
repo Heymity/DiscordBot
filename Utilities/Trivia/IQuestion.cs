@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DiscordBot.Utilities.Trivia
 {
-    interface IQuestion<T>
+    public interface IQuestion<T> where T : BaseAnswer
     {
         string GetQuestion();
 
