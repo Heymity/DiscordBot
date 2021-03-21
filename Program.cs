@@ -6,9 +6,11 @@ using Discord.WebSocket;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Discord.Commands;
 using DiscordBot.Logging;
 using DiscordBot.Commands;
-using Discord.Commands;
+using DiscordBot.Utilities.Managers.Storage;
+using DiscordBot.Utilities.Trivia;
 
 namespace DiscordBot
 {
@@ -23,6 +25,8 @@ namespace DiscordBot
 		private LoggingService loggingService;
 		private CommandHandler commandHandler;
 		private CommandService commandService;
+
+		public DataStorageManager DataStorageManager { get; private set; }
 
 		public static void Main(string[] args)
 			=> new Program().MainAsync().GetAwaiter().GetResult();
@@ -49,7 +53,27 @@ namespace DiscordBot
 				client.SetGameAsync("o henrique pela janela");
 				return Task.CompletedTask;
 			};
-			
+
+			DataStorageManager = new DataStorageManager()
+			{
+				GeneralTriviaData = new TriviaData<BaseAnswer>()
+                {
+					questions = new System.Collections.Generic.List<IQuestion<BaseAnswer>>()
+                    {
+						new BaseQuestion("This is a question", new System.Collections.Generic.List<BaseAnswer>() 
+						{ 
+							new BaseAnswer("This is the alternative A", false),
+							new BaseAnswer("This is the alternative B", false),
+							new BaseAnswer("This is the alternative C", true),
+							new BaseAnswer("This is the alternative D", false),
+							new BaseAnswer("This is the alternative E", false),
+						})
+                    },
+					usersScores = new System.Collections.Generic.Dictionary<IUser, int>()
+                },
+			};
+			DataStorageManager.SaveData();
+
 			// Block this task until the program is closed.
 			await Task.Delay(-1);
 		}

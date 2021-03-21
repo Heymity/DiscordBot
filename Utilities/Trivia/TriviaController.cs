@@ -104,6 +104,6 @@ namespace DiscordBot.Utilities.Trivia
             return embed.Build();
         }
 
-        public IQuestion<T> GetRandomQuestion() => Question = (IQuestion<T>)DataStorageManager.GetRandomQuestion(Guild.Id);       
+        public IQuestion<T> GetRandomQuestion() => Question = (IQuestion<T>)DataStorageManager.Current.GetRandomQuestion(Guild.Id);       
     }
 }

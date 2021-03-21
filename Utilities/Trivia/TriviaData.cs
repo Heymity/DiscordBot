@@ -8,5 +8,11 @@ namespace DiscordBot.Utilities.Trivia
     {
         public List<IQuestion<T>> questions;
         public Dictionary<IUser, int> usersScores;
+
+        public TriviaData(List<IQuestion<T>> questions = null)
+        {
+            this.questions = questions != null ? new List<IQuestion<T>>(questions) : new List<IQuestion<T>>();
+            usersScores = new Dictionary<IUser, int>();
+        }
     }
 }
