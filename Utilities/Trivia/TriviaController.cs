@@ -106,6 +106,8 @@ namespace DiscordBot.Utilities.Trivia
             });
             embed.Description += correctUsers.Count == 0 ? "No one got it right" : "got it right!";
 
+            AutoSaveManager.ReduceIntervalByChangePriority(ChangePriority.ImmediateSave);
+
             return embed.Build();
         }
 

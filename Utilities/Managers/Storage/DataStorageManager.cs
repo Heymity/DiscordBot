@@ -112,7 +112,7 @@ namespace DiscordBot.Utilities.Managers.Storage
 
     public static class AutoSaveManager
     {
-        public const double SAVE_INTERVAL = 10000; // 5 minutes = 300000 10 minutes = 600000
+        public const double SAVE_INTERVAL = 600000; // 5 minutes = 300000 10 minutes = 600000
         const double SECOND = 1000;
 
         public static Dictionary<ChangePriority, double> PriorityEffect { get; set; }
@@ -151,7 +151,9 @@ namespace DiscordBot.Utilities.Managers.Storage
 
         public static void ReduceIntervalByChangePriority(ChangePriority priority)
         {
-
+            var tmp = SaveSchedule.Interval - PriorityEffect[priority];
+            if (tmp <= 0) AutoSave(null, null);
+            else SaveSchedule.Interval -= PriorityEffect[priority];
         }
     }
 

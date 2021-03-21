@@ -101,7 +101,7 @@ namespace DiscordBot
 							new BaseAnswer("This is the correct alternative E", true),
 						}, 1)
 					},
-					usersScores = new System.Collections.Generic.Dictionary<IUser, int>()
+					usersScores = new System.Collections.Generic.Dictionary<ulong, int>()
                 },
 			};
 			DataStorageManager.Current.SaveData();
