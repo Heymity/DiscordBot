@@ -22,7 +22,7 @@ namespace DiscordBot.Utilities.Managers.Data
         {
             Id = id;
             ChannelsData = new Dictionary<ulong, ChannelDataManager>();
-            GuildTriviaData = new TriviaData<BaseAnswer>();
+            GuildTriviaData = new TriviaData<BaseAnswer>(true);
         }
     }
 }

@@ -26,7 +26,7 @@ namespace DiscordBot
 		private CommandHandler commandHandler;
 		private CommandService commandService;
 
-		public DataStorageManager DataStorageManager { get; private set; }
+		private DataStorageManager dataStorageManager;
 
 		public static void Main(string[] args)
 			=> new Program().MainAsync().GetAwaiter().GetResult();
@@ -54,7 +54,7 @@ namespace DiscordBot
 				return Task.CompletedTask;
 			};
 
-			DataStorageManager = new DataStorageManager()
+			dataStorageManager = new DataStorageManager()
 			{
 				GeneralTriviaData = new TriviaData<BaseAnswer>()
                 {
@@ -62,34 +62,72 @@ namespace DiscordBot
                     {
 						new BaseQuestion("This is a question", new System.Collections.Generic.List<BaseAnswer>() 
 						{ 
-							new BaseAnswer("This is the alternative A", false),
+							new BaseAnswer("This is the correct alternative A", true),
 							new BaseAnswer("This is the alternative B", false),
-							new BaseAnswer("This is the alternative C", true),
+							new BaseAnswer("This is the alternative C", false),
 							new BaseAnswer("This is the alternative D", false),
 							new BaseAnswer("This is the alternative E", false),
-						})
-                    },
+						}, 1),
+						new BaseQuestion("This is a question", new System.Collections.Generic.List<BaseAnswer>()
+						{
+							new BaseAnswer("This is the alternative A", false),
+							new BaseAnswer("This is the correct alternative B", true),
+							new BaseAnswer("This is the alternative C", false),
+							new BaseAnswer("This is the alternative D", false),
+							new BaseAnswer("This is the alternative E", false),
+						}, 1),
+						new BaseQuestion("This is a question", new System.Collections.Generic.List<BaseAnswer>()
+						{
+							new BaseAnswer("This is the alternative A", false),
+							new BaseAnswer("This is the alternative B", false),
+							new BaseAnswer("This is the correctalt ernative C", true),
+							new BaseAnswer("This is the alternative D", false),
+							new BaseAnswer("This is the alternative E", false),
+						}, 1),
+						new BaseQuestion("This is a question", new System.Collections.Generic.List<BaseAnswer>()
+						{
+							new BaseAnswer("This is the alternative A", false),
+							new BaseAnswer("This is the alternative B", false),
+							new BaseAnswer("This is the alternative C", false),
+							new BaseAnswer("This is the correct alternative D", true),
+							new BaseAnswer("This is the alternative E", false),
+						}, 1),
+						new BaseQuestion("This is a question", new System.Collections.Generic.List<BaseAnswer>()
+						{
+							new BaseAnswer("This is the alternative A", false),
+							new BaseAnswer("This is the alternative B", false),
+							new BaseAnswer("This is the alternative C", false),
+							new BaseAnswer("This is the alternative D", false),
+							new BaseAnswer("This is the correct alternative E", true),
+						}, 1)
+					},
 					usersScores = new System.Collections.Generic.Dictionary<IUser, int>()
                 },
 			};
-			DataStorageManager.SaveData();
+			DataStorageManager.Current.SaveData();
+			//DataStorageManager.Current.LoadData();
 
 			// Block this task until the program is closed.
 			await Task.Delay(-1);
 		}
 
 #if DEBUG
-		private Task MessageReceived(SocketMessage msg)
+		private async Task MessageReceived(SocketMessage msg)
 		{
-			Console.WriteLine($"({msg.Channel}, {msg.Author}) -> {msg.Content}");
-			return Task.CompletedTask;
+			await Task.Run(() =>
+			{
+				Console.WriteLine($"({msg.Channel}, {msg.Author}) -> {msg.Content}");
+				return Task.CompletedTask;
+			});
         }
 
 		private async Task MessageUpdated(Cacheable<IMessage, ulong> before, SocketMessage after, ISocketMessageChannel channel)
 		{
-			// If the message was not in the cache, downloading it will result in getting a copy of `after`.
-			var message = await before.GetOrDownloadAsync();
-			Console.WriteLine($"({message.Channel}, {message.Author}): {message} -> {after}");
+			await Task.Run(async () =>
+			{
+				var message = await before.GetOrDownloadAsync();
+				Console.WriteLine($"({message.Channel}, {message.Author}): {message} -> {after}");
+			});
 		}
 #endif
 	}

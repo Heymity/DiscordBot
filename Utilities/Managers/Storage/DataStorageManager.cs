@@ -19,16 +19,26 @@ namespace DiscordBot.Utilities.Managers.Storage
             get => _current ??= new DataStorageManager();
             private set => _current = value;
         }
+     
+        public Dictionary<ulong, GuildDataManager> GuildsData { get; private set; }
+        public TriviaData<BaseAnswer> GeneralTriviaData { get; set; }
+
+        public GuildDataManager this[ulong i] 
+        { 
+            get => GetOrCreateGuild(i);
+            set
+            {
+                if (GuildsData.ContainsKey(i)) GuildsData[i] = value;
+                else GuildsData.Add(i, value);
+            }
+        }
 
         public DataStorageManager()
         {
             GuildsData = new Dictionary<ulong, GuildDataManager>();
-            GeneralTriviaData = new TriviaData<BaseAnswer>(null);
+            GeneralTriviaData = new TriviaData<BaseAnswer>(false);
             _current = this;
         }
-
-        public Dictionary<ulong, GuildDataManager> GuildsData { get; private set; }
-        public TriviaData<BaseAnswer> GeneralTriviaData { get; set; }
 
         public IQuestion<BaseAnswer> GetRandomQuestion(ulong guildId)
         {

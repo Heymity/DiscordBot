@@ -98,7 +98,12 @@ namespace DiscordBot.Utilities.Trivia
                 Title = $"The right answer was {reactions[Question.GetCorrectAnswerIndex()].Name}"
             };
 
-            correctUsers.ForEach((IUser user) => embed.Description += $" - **{user.Username}**\n");
+            correctUsers.ForEach((IUser user) =>
+            {
+                var score = DataStorageManager.Current.GetOrCreateGuild(Guild.Id).GuildTriviaData.AddScore(user, Question.Points);
+
+                embed.Description += $" - **{user.Username}** ({score} points)\n";
+            });
             embed.Description += correctUsers.Count == 0 ? "No one got it right" : "got it right!";
 
             return embed.Build();
