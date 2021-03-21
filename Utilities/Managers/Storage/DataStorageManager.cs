@@ -32,12 +32,26 @@ namespace DiscordBot.Utilities.Managers.Storage
 
         public IQuestion<BaseAnswer> GetRandomQuestion(ulong guildId)
         {
-            var tmp = new List<IQuestion<BaseAnswer>>(GeneralTriviaData.questions);
-            tmp.AddRange(GuildsData[guildId].GuildTriviaData.questions);
+            var tmp = new List<IQuestion<BaseAnswer>>();
+            var tmp2 = GetOrCreateGuild(guildId).GuildTriviaData.questions;
+            if (tmp2 != null) tmp.AddRange(tmp2);
+            tmp.AddRange(GeneralTriviaData.questions);
 
             Random rng = new Random();
             return tmp[rng.Next() % tmp.Count];
         }
+
+        public GuildDataManager GetOrCreateGuild(ulong guildId)
+        {
+            if (GuildsData.ContainsKey(guildId))
+            {
+                return GuildsData[guildId];
+            } else
+            {
+                GuildsData.Add(guildId, new GuildDataManager(guildId));
+                return GuildsData[guildId];
+            }
+        } 
 
         public void SaveData()
         {
