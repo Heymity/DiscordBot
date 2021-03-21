@@ -28,13 +28,12 @@ namespace DiscordBot.Modules
                 IQuestion<BaseAnswer> question = new BaseQuestion("This is the Question", tempAns);
                 if (question.GetAnswersLenght() > 5) throw new Exception("The Question can only have up to 5 answers because I dind't find a way to generalize the emoji creation ;)");
 
-                TriviaController<BaseAnswer> triviaController = new TriviaController<BaseAnswer>(question);
+                TriviaController<BaseAnswer> triviaController = new TriviaController<BaseAnswer>(question, Context.Guild);
 
                 var r = base.ReplyAsync(embed: triviaController.GetQuestionEmbed()).Result;
 
-                triviaController.SetMessageAndChannel(r);
+                triviaController.SetMessage(r);
                 await triviaController.HandleReactionsAsync();                              
-
                 Context.Client.ReactionAdded += triviaController.HandleReactionAdded;
 
                 Timer t = new Timer

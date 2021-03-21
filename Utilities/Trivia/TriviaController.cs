@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.WebSocket;
+using DiscordBot.Utilities.Managers.Storage;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,28 +10,29 @@ namespace DiscordBot.Utilities.Trivia
 {
     public class TriviaController<T> where T : BaseAnswer
     {
-        public ulong channelId;
-        public Dictionary<IUser, string> dictionary;
+        public SocketGuild Guild { get; set; }
+        public Dictionary<IUser, string> UsersAnswers { get; set; }
         public IQuestion<T> Question { get; private set; }
-        public IUserMessage Message { get; set; }
+        public IUserMessage Message { get; private set; }
         List<Emoji> reactions;
 
-        public TriviaController(ulong channelId)
+        public TriviaController(SocketGuild guild)
         {
-            this.channelId = channelId;
-            dictionary = new Dictionary<IUser, string>();
+            Guild = guild;
+            UsersAnswers = new Dictionary<IUser, string>();
         }
 
-        public TriviaController(IQuestion<T> question)
+        public TriviaController(IQuestion<T> question, SocketGuild guild)
         {
+            Guild = guild;
             Question = question;
-            dictionary = new Dictionary<IUser, string>();
+            UsersAnswers = new Dictionary<IUser, string>();
         }
 
         public List<IUser> GetCorrectUsers(string correctAns)
         {
             List<IUser> users = new List<IUser>();
-            foreach (var e in dictionary)
+            foreach (var e in UsersAnswers)
             {
                 if (e.Value == correctAns)
                 {
@@ -41,11 +43,7 @@ namespace DiscordBot.Utilities.Trivia
             return users;
         }     
 
-        public void SetMessageAndChannel(IUserMessage message)
-        {
-            Message = message;
-            channelId = message.Channel.Id;
-        }
+        public void SetMessage(IUserMessage message) => Message = message;
 
         public async Task HandleReactionsAsync()
         {
@@ -65,11 +63,11 @@ namespace DiscordBot.Utilities.Trivia
 
                 var user = reaction.User.Value;
                 var ans = reaction.Emote.Name;
-                if (dictionary.ContainsKey(user))
+                if (UsersAnswers.ContainsKey(user))
                 {
-                    dictionary[user] = ans;
+                    UsersAnswers[user] = ans;
                 }
-                else dictionary.Add(user, ans);
+                else UsersAnswers.Add(user, ans);
             });
         }
 
@@ -93,22 +91,19 @@ namespace DiscordBot.Utilities.Trivia
         public Embed WhenTimeout()
         {
             Console.WriteLine("Time Out!");
-            var tmp = GetCorrectUsers(reactions[Question.GetCorrectAnswerIndex()].Name);
+            var correctUsers = GetCorrectUsers(reactions[Question.GetCorrectAnswerIndex()].Name);
 
             EmbedBuilder embed = new EmbedBuilder() 
             { 
                 Title = $"The right answer was {reactions[Question.GetCorrectAnswerIndex()].Name}"
             };
-            for (int i = 0; i < tmp.Count; i++)
-            {
-                embed.Description += $" - **{tmp[i].Username}**\n";
-                Console.WriteLine(tmp[i].ToString());
-            }
-            embed.Description += embed.Description == "" ? "No one got it right" : "got it right!";
+
+            correctUsers.ForEach((IUser user) => embed.Description += $" - **{user.Username}**\n");
+            embed.Description += correctUsers.Count == 0 ? "No one got it right" : "got it right!";
 
             return embed.Build();
         }
 
-        //public IQuestion GetRandomQuestion() { }
+        public IQuestion<T> GetRandomQuestion() => Question = (IQuestion<T>)DataStorageManager.GetRandomQuestion(Guild.Id);       
     }
 }
