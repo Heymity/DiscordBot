@@ -2,6 +2,7 @@
 using DiscordBot.Utilities.Trivia;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -118,15 +119,19 @@ namespace DiscordBot.Utilities.Managers.Storage
         public static Dictionary<ChangePriority, double> PriorityEffect { get; set; }
 
         public static Timer SaveSchedule { get; set; }
+        public static Stopwatch ElapsedTime { get; set; }
 
         public static void Start()
         {
+
+            ElapsedTime = new Stopwatch();
             SaveSchedule = new Timer()
             {
                 Interval = SAVE_INTERVAL,
                 AutoReset = true,
             };
             SaveSchedule.Elapsed += AutoSave;
+            ElapsedTime.Start();
             SaveSchedule.Start();
 
             PriorityEffect = new Dictionary<ChangePriority, double>()
@@ -146,14 +151,26 @@ namespace DiscordBot.Utilities.Managers.Storage
         {
             Console.WriteLine("Auto Saving...");
             DataStorageManager.Current.SaveData();
+            ElapsedTime.Restart();
             SaveSchedule.Interval = SAVE_INTERVAL;
         }
 
         public static void ReduceIntervalByChangePriority(ChangePriority priority)
         {
-            var tmp = SaveSchedule.Interval - PriorityEffect[priority];
+            if (priority == 0) AutoSave(null, null);
+
+            var priorityEffectSum = 0d;
+            int baseBin = 0x0000_0001;
+            for(int i = 0; i < 7; i++)
+            {
+                if ((priority & (ChangePriority)baseBin) == (ChangePriority)baseBin)
+                    priorityEffectSum += PriorityEffect[(ChangePriority)baseBin];
+                baseBin <<= 1;
+            }
+            var remainingTime = SaveSchedule.Interval - ElapsedTime.ElapsedMilliseconds;
+            var tmp = remainingTime - priorityEffectSum;
             if (tmp <= 0) AutoSave(null, null);
-            else SaveSchedule.Interval -= PriorityEffect[priority];
+            else SaveSchedule.Interval -= priorityEffectSum;
         }
     }
 
