@@ -3,6 +3,8 @@ using DiscordBot.Utilities.Trivia;
 using System;
 using System.Timers;
 using System.Threading.Tasks;
+using Discord;
+using DiscordBot.Utilities.Managers.Storage;
 
 namespace DiscordBot.Modules
 {
@@ -51,5 +53,17 @@ namespace DiscordBot.Modules
 
             });
         }  
+
+        [Command("get user")]
+        [Alias("gu", "user")]
+        public async Task GetUserInfo(IUser user) 
+        {
+            EmbedBuilder embed = new EmbedBuilder()
+            {
+                Title = $"{user.Username} trivia profile",
+                Description = $"{DataStorageManager.Current[Context.Guild.Id].GuildTriviaData.GetUserScore(user.Id)} points"
+            };
+            await ReplyAsync(embed: embed.Build());
+        }
     }
 }

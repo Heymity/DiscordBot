@@ -168,7 +168,7 @@ namespace DiscordBot.Utilities.Managers.Storage
             var remainingTime = SaveSchedule.Interval - ElapsedTime.ElapsedMilliseconds;
             var tmp = remainingTime - priorityEffectSum;
             if (tmp <= 0) AutoSave(null, null);
-            else SaveSchedule.Interval -= priorityEffectSum;
+            else SaveSchedule.Interval -= priorityEffectSum + ElapsedTime.ElapsedMilliseconds;
         }
     }
 

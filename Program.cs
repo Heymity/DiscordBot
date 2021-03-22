@@ -1,5 +1,5 @@
-﻿#define DEBUG
-//#undef DEBUG
+﻿//#define DEBUG
+#undef DEBUG
 
 using Discord;
 using Discord.WebSocket;
@@ -54,7 +54,7 @@ namespace DiscordBot
 				return Task.CompletedTask;
 			};
 
-			dataStorageManager = new DataStorageManager()
+			/**dataStorageManager = new DataStorageManager()
 			{
 				GeneralTriviaData = new TriviaData<BaseAnswer>()
                 {
@@ -104,8 +104,8 @@ namespace DiscordBot
 					usersScores = new System.Collections.Generic.Dictionary<ulong, int>()
                 },
 			};
-			DataStorageManager.Current.SaveData();
-			//DataStorageManager.Current.LoadData();
+			DataStorageManager.Current.SaveData();*/
+			DataStorageManager.Current.LoadData();
 
 			// Block this task until the program is closed.
 			await Task.Delay(-1);

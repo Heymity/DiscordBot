@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using DiscordBot.Utilities;
+using DiscordBot.Utilities.Managers.Storage;
 
 namespace DiscordBot.Modules
 {
@@ -44,7 +45,27 @@ namespace DiscordBot.Modules
 			await ReplyAsync(embed: eb.Build());
         }
 
-        private string GetContent(string str)
+		[Command("save")]
+		public async Task Save()
+        {
+			if (Context.Message.Author.Id != 226473285213224963) return;
+
+			Console.WriteLine(Context.Message.Author.Id);
+			await ReplyAsync("Saving...");
+			DataStorageManager.Current.SaveData();
+        }
+
+		[Command("load")]
+		public async Task Load()
+		{
+			if (Context.Message.Author.Id != 226473285213224963) return;
+
+			Console.WriteLine(Context.Message.Author.Id);
+			await ReplyAsync("Loading...");
+			DataStorageManager.Current.LoadData();
+		}
+
+		private string GetContent(string str)
         {
 			var tmp = new List<string>(str.Split("\""));
 			return tmp[tmp.IndexOf("content") + 2];

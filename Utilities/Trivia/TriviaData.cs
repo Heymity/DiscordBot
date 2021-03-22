@@ -40,5 +40,16 @@ namespace DiscordBot.Utilities.Trivia
                 usersScores.Add(user, score);
             return score;
         }
+
+        public int? GetUserScore(ulong Id)
+        {
+            if (!shouldStoreScores) return -1;
+            usersScores ??= new Dictionary<ulong, int>();
+
+            if (usersScores.ContainsKey(Id))
+                return usersScores[Id];
+
+            return null;
+        }
     }
 }
