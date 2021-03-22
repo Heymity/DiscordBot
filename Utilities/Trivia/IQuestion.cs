@@ -6,6 +6,8 @@ namespace DiscordBot.Utilities.Trivia
 {
     public interface IQuestion<T> where T : BaseAnswer
     {
+        public int Points { get; set; }
+
         string GetQuestion();
 
         T GetCorrectAnswer();
