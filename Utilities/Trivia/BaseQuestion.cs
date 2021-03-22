@@ -8,9 +8,12 @@ namespace DiscordBot.Utilities.Trivia
     {
         public string Content {get; private set;}
         public List<BaseAnswer> Answers { get; private set; }
+        private int _points = 1;
+        public int Points { get => _points; set => _points = value; }
 
-        public BaseQuestion(string content, List<BaseAnswer> answers)
+        public BaseQuestion(string content, List<BaseAnswer> answers, int points)
         {
+            Points = points;
             Content = content;
             Answers = answers;
         }
