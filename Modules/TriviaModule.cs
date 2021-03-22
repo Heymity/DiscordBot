@@ -1,9 +1,6 @@
-﻿using Discord;
-using Discord.Commands;
-using Discord.WebSocket;
+﻿using Discord.Commands;
 using DiscordBot.Utilities.Trivia;
 using System;
-using System.Collections.Generic;
 using System.Timers;
 using System.Threading.Tasks;
 

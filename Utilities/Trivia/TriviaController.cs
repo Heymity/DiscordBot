@@ -2,7 +2,6 @@
 using Discord.WebSocket;
 using DiscordBot.Utilities.Managers.Storage;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
