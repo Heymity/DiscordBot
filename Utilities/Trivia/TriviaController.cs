@@ -74,11 +74,11 @@ namespace DiscordBot.Utilities.Trivia
         {
             EmbedBuilder embed = new EmbedBuilder()
             {
-                Title = Question.GetQuestion()
+                Title = Question.GetQuestion
             };
 
             string[] ansLetters = new string[] { "A:", "B:", "C:", "D:", "E:" };
-            var ans = Question.GetAnswers();
+            var ans = Question.GetAnswers;
             for (int i = 0; i < ans.Count; i++)
             {
                 embed.Description += $"**{ansLetters[i]}** {ans[i].Content}\n";

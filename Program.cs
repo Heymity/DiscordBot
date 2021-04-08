@@ -10,6 +10,7 @@ using Discord.Commands;
 using DiscordBot.Logging;
 using DiscordBot.Commands;
 using DiscordBot.Utilities.Managers.Storage;
+using DiscordBot.Utilities.Trivia;
 //using DiscordBot.Utilities.Trivia;
 
 namespace DiscordBot
@@ -54,11 +55,11 @@ namespace DiscordBot
 				return Task.CompletedTask;
 			};
 
-			/**dataStorageManager = new DataStorageManager()
+			var dataStorageManager = new DataStorageManager()
 			{
 				GeneralTriviaData = new TriviaData<BaseAnswer>()
                 {
-					questions = new System.Collections.Generic.List<IQuestion<BaseAnswer>>()
+					questions = new System.Collections.Generic.List<BaseQuestion>()
                     {
 						new BaseQuestion("This is a question", new System.Collections.Generic.List<BaseAnswer>() 
 						{ 
@@ -104,8 +105,9 @@ namespace DiscordBot
 					usersScores = new System.Collections.Generic.Dictionary<ulong, int>()
                 },
 			};
-			DataStorageManager.Current.SaveData();*/
+			//DataStorageManager.Current.SaveData();
 			DataStorageManager.Current.LoadData();
+			//DataStorageManager.Current.SaveNewQuestionsInJson(DataStorageManager.Current.GeneralTriviaData.questions);
 			DataStorageManager.Current.LoadNewQuestionsFromJson();
 
 			// Block this task until the program is closed.

@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Text.Json;
 using System.Timers;
 
 namespace DiscordBot.Utilities.Managers.Storage
@@ -90,10 +91,12 @@ namespace DiscordBot.Utilities.Managers.Storage
 
         public void LoadData()
         {
-            if (!File.Exists("DataFile.dat")) File.Create("DataFile.dat").Close();
-            FileStream fs = new FileStream("DataFile.dat", FileMode.Open);
+            FileStream fs;
+            if (!File.Exists("DataFile.dat")) fs = new FileStream("DataFile.dat", FileMode.Create);
+            fs = new FileStream("DataFile.dat", FileMode.Open);
             try
             {
+                if (fs.Length == 0) return;
                 BinaryFormatter formatter = new BinaryFormatter();
 
                 _current = (DataStorageManager)formatter.Deserialize(fs);
@@ -116,11 +119,40 @@ namespace DiscordBot.Utilities.Managers.Storage
 
             Console.WriteLine(files[0]);
 
-            if (!File.Exists(@"JSONQuestions\DataFile.dat")) File.Create("DataFile.dat").Close();
+            foreach (string filePath in files)
+            {
+                if (Path.GetExtension(filePath) == ".json")
+                {
+                    var value = File.ReadAllText(filePath);
 
-            FileStream fs = new FileStream("DataFile.dat", FileMode.Open);
+                    var questions = JsonSerializer.Deserialize(value, typeof(List<BaseQuestion>)) as List<BaseQuestion>;
 
+                    foreach(var question in questions)
+                    {
+                        if (!GeneralTriviaData.questions.Contains(question))
+                            GeneralTriviaData.questions.Add(question);
+                    }
+
+                    Console.WriteLine(questions.Count);
+                }
+            }
         }
+
+        public void SaveNewQuestionsInJson(List<BaseQuestion> questions)
+        {
+            if (!Directory.Exists(JsonQuestionsPath)) Directory.CreateDirectory(JsonQuestionsPath);
+
+            var options = new JsonSerializerOptions()
+            {
+                WriteIndented = true
+            };
+
+            var value = JsonSerializer.Serialize(questions, options);
+
+            File.WriteAllText($"{JsonQuestionsPath}/{GeneralTriviaData.questions?[0]?.Content}.json", value);
+        }
+
+        public void SaveNewQuestionsInJson(params BaseQuestion[] question) => SaveNewQuestionsInJson(new List<BaseQuestion>(question));
     }
 
     public static class AutoSaveManager

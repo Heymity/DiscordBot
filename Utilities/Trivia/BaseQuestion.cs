@@ -6,10 +6,16 @@ namespace DiscordBot.Utilities.Trivia
     [System.Serializable]
     public class BaseQuestion : IQuestion<BaseAnswer>
     {
-        public string Content {get; private set;}
-        public List<BaseAnswer> Answers { get; private set; }
+        private string _content;
+        public string Content { get => _content; private set => _content = value; }
+
+        public List<BaseAnswer> answers; 
+        public List<BaseAnswer> Answers { get => answers; private set => answers = value; }
+
         private int _points = 1;
         public int Points { get => _points; set => _points = value; }
+        public string GetQuestion => Content;
+        public IReadOnlyList<BaseAnswer> GetAnswers => Answers;
 
         public BaseQuestion(string content, List<BaseAnswer> answers, int points)
         {
@@ -17,14 +23,16 @@ namespace DiscordBot.Utilities.Trivia
             Content = content;
             Answers = answers;
         }
-
-        public IReadOnlyList<BaseAnswer> GetAnswers() => Answers;
+        public BaseQuestion()
+        {
+            Points = 0;
+            Content = "";
+            Answers = new List<BaseAnswer>();
+        }
 
         public int GetAnswersLenght() => Answers.Count;
 
         public BaseAnswer GetCorrectAnswer() => Answers.Where((BaseAnswer ans) => ans.IsCorrect == true).FirstOrDefault();
-
-        public string GetQuestion() => Content;
 
         public bool IsCorrect(BaseAnswer ans) => ans.IsCorrect;
 

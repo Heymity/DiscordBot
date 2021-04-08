@@ -6,13 +6,13 @@ namespace DiscordBot.Utilities.Trivia
     [System.Serializable]
     public struct TriviaData<T> where T : BaseAnswer
     {
-        public List<IQuestion<T>> questions;
+        public List<BaseQuestion> questions;
         public bool shouldStoreScores;
         public Dictionary<ulong, int> usersScores;
         
-        public TriviaData(bool _shoudStoreScores, List<IQuestion<T>> questions = null)
+        public TriviaData(bool _shoudStoreScores, List<BaseQuestion> questions = null)
         {
-            this.questions = questions != null ? new List<IQuestion<T>>(questions) : new List<IQuestion<T>>();
+            this.questions = questions != null ? new List<BaseQuestion>(questions) : new List<BaseQuestion>();
             shouldStoreScores = _shoudStoreScores;
             usersScores = new Dictionary<ulong, int>();
         }
