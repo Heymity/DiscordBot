@@ -43,7 +43,7 @@ namespace DiscordBot.Modules
         public Task Divide(params double[] numbers) => ReplyAsync(CalculatorLogic.Divide(numbers).ToString());
 
         [Command("pow")]
-        [Alias("^", "^^", "p", "power", "exp", "exponent", "exponencial")]
+        [Alias("^", "^^", "**", "p", "power", "exp", "exponent", "exponencial")]
         public Task Power(params double[] numbers) => ReplyAsync(CalculatorLogic.Power(numbers).ToString());
 
         [Command("sqrt")]

@@ -20,3 +20,25 @@ C:\Users\GABRIEL\Desktop\Lang Files\C# Files\DiscordBot\DiscordBot\obj\Debug\net
 C:\Users\GABRIEL\Desktop\Lang Files\C# Files\DiscordBot\DiscordBot\obj\Debug\netcoreapp3.1\DiscordBot.dll
 C:\Users\GABRIEL\Desktop\Lang Files\C# Files\DiscordBot\DiscordBot\obj\Debug\netcoreapp3.1\DiscordBot.pdb
 C:\Users\GABRIEL\Desktop\Lang Files\C# Files\DiscordBot\DiscordBot\obj\Debug\netcoreapp3.1\DiscordBot.genruntimeconfig.cache
+C:\Users\GABRIEL\Desktop\LangFiles\C#\DiscordBot\DiscordBot\bin\Debug\netcoreapp3.1\DiscordBot.exe
+C:\Users\GABRIEL\Desktop\LangFiles\C#\DiscordBot\DiscordBot\bin\Debug\netcoreapp3.1\DiscordBot.deps.json
+C:\Users\GABRIEL\Desktop\LangFiles\C#\DiscordBot\DiscordBot\bin\Debug\netcoreapp3.1\DiscordBot.runtimeconfig.json
+C:\Users\GABRIEL\Desktop\LangFiles\C#\DiscordBot\DiscordBot\bin\Debug\netcoreapp3.1\DiscordBot.runtimeconfig.dev.json
+C:\Users\GABRIEL\Desktop\LangFiles\C#\DiscordBot\DiscordBot\bin\Debug\netcoreapp3.1\DiscordBot.dll
+C:\Users\GABRIEL\Desktop\LangFiles\C#\DiscordBot\DiscordBot\bin\Debug\netcoreapp3.1\DiscordBot.pdb
+C:\Users\GABRIEL\Desktop\LangFiles\C#\DiscordBot\DiscordBot\bin\Debug\netcoreapp3.1\Discord.Net.Commands.dll
+C:\Users\GABRIEL\Desktop\LangFiles\C#\DiscordBot\DiscordBot\bin\Debug\netcoreapp3.1\Discord.Net.Core.dll
+C:\Users\GABRIEL\Desktop\LangFiles\C#\DiscordBot\DiscordBot\bin\Debug\netcoreapp3.1\Discord.Net.Rest.dll
+C:\Users\GABRIEL\Desktop\LangFiles\C#\DiscordBot\DiscordBot\bin\Debug\netcoreapp3.1\Discord.Net.Webhook.dll
+C:\Users\GABRIEL\Desktop\LangFiles\C#\DiscordBot\DiscordBot\bin\Debug\netcoreapp3.1\Discord.Net.WebSocket.dll
+C:\Users\GABRIEL\Desktop\LangFiles\C#\DiscordBot\DiscordBot\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
+C:\Users\GABRIEL\Desktop\LangFiles\C#\DiscordBot\DiscordBot\bin\Debug\netcoreapp3.1\System.Interactive.Async.dll
+C:\Users\GABRIEL\Desktop\LangFiles\C#\DiscordBot\DiscordBot\bin\Debug\netcoreapp3.1\System.Linq.Async.dll
+C:\Users\GABRIEL\Desktop\LangFiles\C#\DiscordBot\DiscordBot\obj\Debug\netcoreapp3.1\DiscordBot.csprojAssemblyReference.cache
+C:\Users\GABRIEL\Desktop\LangFiles\C#\DiscordBot\DiscordBot\obj\Debug\netcoreapp3.1\DiscordBot.AssemblyInfoInputs.cache
+C:\Users\GABRIEL\Desktop\LangFiles\C#\DiscordBot\DiscordBot\obj\Debug\netcoreapp3.1\DiscordBot.AssemblyInfo.cs
+C:\Users\GABRIEL\Desktop\LangFiles\C#\DiscordBot\DiscordBot\obj\Debug\netcoreapp3.1\DiscordBot.csproj.CoreCompileInputs.cache
+C:\Users\GABRIEL\Desktop\LangFiles\C#\DiscordBot\DiscordBot\obj\Debug\netcoreapp3.1\DiscordBot.csproj.CopyComplete
+C:\Users\GABRIEL\Desktop\LangFiles\C#\DiscordBot\DiscordBot\obj\Debug\netcoreapp3.1\DiscordBot.dll
+C:\Users\GABRIEL\Desktop\LangFiles\C#\DiscordBot\DiscordBot\obj\Debug\netcoreapp3.1\DiscordBot.pdb
+C:\Users\GABRIEL\Desktop\LangFiles\C#\DiscordBot\DiscordBot\obj\Debug\netcoreapp3.1\DiscordBot.genruntimeconfig.cache

@@ -1,5 +1,5 @@
-﻿//#define DEBUG
-#undef DEBUG
+﻿#define DEBUG
+//#undef DEBUG
 
 using Discord;
 using Discord.WebSocket;
@@ -10,23 +10,23 @@ using Discord.Commands;
 using DiscordBot.Logging;
 using DiscordBot.Commands;
 using DiscordBot.Utilities.Managers.Storage;
-using DiscordBot.Utilities.Trivia;
+//using DiscordBot.Utilities.Trivia;
 
 namespace DiscordBot
 {
 	public class Program
 	{
 #if DEFAULTDIR
-		private const string TOKEN_DIRECTORY = "C:/Users/GABRIEL/Desktop/Lang Files/C# Files/DiscordBot/DiscordBot/Token.txt";
+		public const string DIRECTORY = "C:/Users/GABRIEL/Desktop/LangFiles/C#/DiscordBot/DiscordBot";
 #else
-		private const string TOKEN_DIRECTORY = "";
+		public const string DIRECTORY = "";
 #endif
+		private readonly string tokenDir = $"{DIRECTORY}/Token.txt";
+
 		private DiscordSocketClient client;
 		private LoggingService loggingService;
 		private CommandHandler commandHandler;
 		private CommandService commandService;
-
-		private DataStorageManager dataStorageManager;
 
 		public static void Main(string[] args)
 			=> new Program().MainAsync().GetAwaiter().GetResult();
@@ -40,7 +40,7 @@ namespace DiscordBot
 
 			await commandHandler.InstallCommandsAsync();
 
-			await client.LoginAsync(TokenType.Bot, File.ReadAllText(TOKEN_DIRECTORY));
+			await client.LoginAsync(TokenType.Bot, File.ReadAllText(tokenDir));
 			await client.StartAsync();
 
 #if DEBUG
@@ -106,6 +106,7 @@ namespace DiscordBot
 			};
 			DataStorageManager.Current.SaveData();*/
 			DataStorageManager.Current.LoadData();
+			DataStorageManager.Current.LoadNewQuestionsFromJson();
 
 			// Block this task until the program is closed.
 			await Task.Delay(-1);

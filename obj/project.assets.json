@@ -1462,11 +1462,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\GABRIEL\\Desktop\\Lang Files\\C# Files\\DiscordBot\\DiscordBot\\DiscordBot.csproj",
+      "projectUniqueName": "C:\\Users\\GABRIEL\\Desktop\\LangFiles\\C#\\DiscordBot\\DiscordBot\\DiscordBot.csproj",
       "projectName": "DiscordBot",
-      "projectPath": "C:\\Users\\GABRIEL\\Desktop\\Lang Files\\C# Files\\DiscordBot\\DiscordBot\\DiscordBot.csproj",
+      "projectPath": "C:\\Users\\GABRIEL\\Desktop\\LangFiles\\C#\\DiscordBot\\DiscordBot\\DiscordBot.csproj",
       "packagesPath": "C:\\Users\\GABRIEL\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\GABRIEL\\Desktop\\Lang Files\\C# Files\\DiscordBot\\DiscordBot\\obj\\",
+      "outputPath": "C:\\Users\\GABRIEL\\Desktop\\LangFiles\\C#\\DiscordBot\\DiscordBot\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\GABRIEL\\AppData\\Roaming\\NuGet\\NuGet.Config",

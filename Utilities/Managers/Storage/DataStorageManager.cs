@@ -12,17 +12,19 @@ namespace DiscordBot.Utilities.Managers.Storage
 {
     [Serializable]
     public class DataStorageManager
-    {      
-
+    {
         private static DataStorageManager _current;
+
+        public string JsonQuestionsPath => $"{Program.DIRECTORY}/JSONQuestions";
+
         public static DataStorageManager Current
         {
             get => _current ??= new DataStorageManager();
             private set => _current = value;
         }
 
-        public GuildDataManager this[ulong i] 
-        { 
+        public GuildDataManager this[ulong i]
+        {
             get => GetOrCreateGuild(i);
             set
             {
@@ -30,11 +32,9 @@ namespace DiscordBot.Utilities.Managers.Storage
                 else GuildsData.Add(i, value);
             }
         }
-        
 
         public Dictionary<ulong, GuildDataManager> GuildsData { get; private set; }
         public TriviaData<BaseAnswer> GeneralTriviaData { get; set; }
-
 
         public DataStorageManager()
         {
@@ -43,7 +43,6 @@ namespace DiscordBot.Utilities.Managers.Storage
             _current = this;
             AutoSaveManager.Start();
         }
-
 
         public IQuestion<BaseAnswer> GetRandomQuestion(ulong guildId)
         {
@@ -61,7 +60,8 @@ namespace DiscordBot.Utilities.Managers.Storage
             if (GuildsData.ContainsKey(guildId))
             {
                 return GuildsData[guildId];
-            } else
+            }
+            else
             {
                 GuildsData.Add(guildId, new GuildDataManager(guildId));
                 return GuildsData[guildId];
@@ -90,6 +90,7 @@ namespace DiscordBot.Utilities.Managers.Storage
 
         public void LoadData()
         {
+            if (!File.Exists("DataFile.dat")) File.Create("DataFile.dat").Close();
             FileStream fs = new FileStream("DataFile.dat", FileMode.Open);
             try
             {
@@ -107,12 +108,25 @@ namespace DiscordBot.Utilities.Managers.Storage
                 fs.Close();
             }
         }
+
+        public void LoadNewQuestionsFromJson()
+        {
+            if (!Directory.Exists(JsonQuestionsPath)) Directory.CreateDirectory(JsonQuestionsPath);
+            var files = Directory.GetFiles(JsonQuestionsPath);
+
+            Console.WriteLine(files[0]);
+
+            if (!File.Exists(@"JSONQuestions\DataFile.dat")) File.Create("DataFile.dat").Close();
+
+            FileStream fs = new FileStream("DataFile.dat", FileMode.Open);
+
+        }
     }
 
     public static class AutoSaveManager
     {
         public const double SAVE_INTERVAL = 600000; // 5 minutes = 300000 10 minutes = 600000
-        const double SECOND = 1000;
+        private const double SECOND = 1000;
 
         public static Dictionary<ChangePriority, double> PriorityEffect { get; set; }
 
@@ -121,7 +135,6 @@ namespace DiscordBot.Utilities.Managers.Storage
 
         public static void Start()
         {
-
             ElapsedTime = new Stopwatch();
             SaveSchedule = new Timer()
             {
@@ -159,7 +172,7 @@ namespace DiscordBot.Utilities.Managers.Storage
 
             var priorityEffectSum = 0d;
             int baseBin = 0x0000_0001;
-            for(int i = 0; i < 7; i++)
+            for (int i = 0; i < 7; i++)
             {
                 if ((priority & (ChangePriority)baseBin) == (ChangePriority)baseBin)
                     priorityEffectSum += PriorityEffect[(ChangePriority)baseBin];

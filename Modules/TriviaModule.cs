@@ -16,16 +16,6 @@ namespace DiscordBot.Modules
         {
             await Task.Run(async () =>
             {
-                /**List<BaseAnswer> tempAns = new List<BaseAnswer>() 
-                { 
-                    new BaseAnswer("The A answer", false),
-                    new BaseAnswer("The B answer", false),
-                    new BaseAnswer("The C answer", false),
-                    new BaseAnswer("The D answer", true),
-                    new BaseAnswer("The E answer", false),
-                };*/
-                //IQuestion<BaseAnswer> question = new BaseQuestion("This is the Question", tempAns);
-
                 TriviaController<BaseAnswer> triviaController = new TriviaController<BaseAnswer>(Context.Guild);
                 triviaController.GetRandomQuestion();
 
@@ -50,7 +40,6 @@ namespace DiscordBot.Modules
                     await ReplyAsync(embed: triviaController.WhenTimeout());
                 });
                 t.Start();
-
             });
         }  
 
