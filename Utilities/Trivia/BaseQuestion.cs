@@ -7,15 +7,17 @@ namespace DiscordBot.Utilities.Trivia
     public class BaseQuestion : IQuestion<BaseAnswer>
     {
         private string _content;
-        public string Content { get => _content; private set => _content = value; }
+        public string Content { get => _content; set => _content = value; }
 
-        public List<BaseAnswer> answers; 
-        public List<BaseAnswer> Answers { get => answers; private set => answers = value; }
+        public List<BaseAnswer> answers;
+        public List<BaseAnswer> Answers { get => answers; set => answers = value; }
 
         private int _points = 1;
         public int Points { get => _points; set => _points = value; }
-        public string GetQuestion => Content;
-        public IReadOnlyList<BaseAnswer> GetAnswers => Answers;
+
+        public string GetQuestion() => Content;
+
+        public IReadOnlyList<BaseAnswer> GetAnswers() => Answers;
 
         public BaseQuestion(string content, List<BaseAnswer> answers, int points)
         {
@@ -23,6 +25,7 @@ namespace DiscordBot.Utilities.Trivia
             Content = content;
             Answers = answers;
         }
+
         public BaseQuestion()
         {
             Points = 0;

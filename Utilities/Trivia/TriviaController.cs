@@ -13,7 +13,7 @@ namespace DiscordBot.Utilities.Trivia
         public Dictionary<IUser, string> UsersAnswers { get; set; }
         public IQuestion<T> Question { get; private set; }
         public IUserMessage Message { get; private set; }
-        List<Emoji> reactions;
+        private List<Emoji> reactions;
 
         public TriviaController(SocketGuild guild)
         {
@@ -37,10 +37,10 @@ namespace DiscordBot.Utilities.Trivia
                 {
                     users.Add(e.Key);
                 }
-            }         
+            }
 
             return users;
-        }     
+        }
 
         public void SetMessage(IUserMessage message) => Message = message;
 
@@ -74,11 +74,11 @@ namespace DiscordBot.Utilities.Trivia
         {
             EmbedBuilder embed = new EmbedBuilder()
             {
-                Title = Question.GetQuestion
+                Title = Question.GetQuestion()
             };
 
             string[] ansLetters = new string[] { "A:", "B:", "C:", "D:", "E:" };
-            var ans = Question.GetAnswers;
+            var ans = Question.GetAnswers();
             for (int i = 0; i < ans.Count; i++)
             {
                 embed.Description += $"**{ansLetters[i]}** {ans[i].Content}\n";
@@ -92,8 +92,8 @@ namespace DiscordBot.Utilities.Trivia
             Console.WriteLine("Time Out!");
             var correctUsers = GetCorrectUsers(reactions[Question.GetCorrectAnswerIndex()].Name);
 
-            EmbedBuilder embed = new EmbedBuilder() 
-            { 
+            EmbedBuilder embed = new EmbedBuilder()
+            {
                 Title = $"The right answer was {reactions[Question.GetCorrectAnswerIndex()].Name}"
             };
 
@@ -110,6 +110,6 @@ namespace DiscordBot.Utilities.Trivia
             return embed.Build();
         }
 
-        public IQuestion<T> GetRandomQuestion() => Question = (IQuestion<T>)DataStorageManager.Current.GetRandomQuestion(Guild.Id);       
+        public IQuestion<T> GetRandomQuestion() => Question = (IQuestion<T>)DataStorageManager.Current.GetRandomQuestion(Guild.Id);
     }
 }

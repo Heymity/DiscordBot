@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace DiscordBot.Utilities.Calculator
 {
-    static class ExpressionParser
+    internal static class ExpressionParser
     {
         public static readonly List<char> openingGroupChars = new List<char>() { '(', '[', '{' };
         public static readonly List<char> closingGroupChars = new List<char>() { ')', ']', '}' };
@@ -57,7 +57,7 @@ namespace DiscordBot.Utilities.Calculator
                         symbol = new Expression(SymbolType.Operator, exp[i].ToString());
                     }
 
-                    if (tmp != "") 
+                    if (tmp != "")
                         parsedExp.Add(new Expression(SymbolType.Number, tmp));
 
                     tmp = "";
@@ -65,7 +65,7 @@ namespace DiscordBot.Utilities.Calculator
                     continue;
                 }
             }
-            /// If the expression ends with a number it need to be added after the loop, 
+            /// If the expression ends with a number it need to be added after the loop,
             /// since in the for loop it only adds numbers when a operator is found after
             if (tmp != "")
                 parsedExp.Add(new Expression(SymbolType.Number, tmp));
@@ -74,7 +74,7 @@ namespace DiscordBot.Utilities.Calculator
             if (parsedExp.Count <= 3) return parsedExp;
 
             /// This will interate the list and reduce all items to its simplest form, that is
-            /// having only three items (value operator value) 
+            /// having only three items (value operator value)
             /// The result will be a tree of nested expressions.
             Expression s = Expression.Empty;
             while (s != null)
@@ -86,18 +86,18 @@ namespace DiscordBot.Utilities.Calculator
                 parsedExp.RemoveRange(i - 2, 3);
                 parsedExp.Insert(i - 2, s);
             }
-         
+
             return parsedExp;
         }
 
-        static Expression GetNestedExpressions(string exp, ref int index)
+        private static Expression GetNestedExpressions(string exp, ref int index)
         {
             index++;
-            /// This is the index after the opening group char, and nestedIndex count how many 
+            /// This is the index after the opening group char, and nestedIndex count how many
             /// nested groups there are, so it closes on the right index
             int startIndex = index;
             int nestedIndex = 0;
-            for(_ = 0; index < exp.Length; index++)
+            for (_ = 0; index < exp.Length; index++)
             {
                 if (openingGroupChars.Contains(exp[index]))
                     nestedIndex++;
@@ -116,7 +116,7 @@ namespace DiscordBot.Utilities.Calculator
             return expression;
         }
 
-        static Expression ReduceParse(List<Expression> parsedExp, out int i)
+        private static Expression ReduceParse(List<Expression> parsedExp, out int i)
         {
             i = 0;
             if (parsedExp.Count <= 3) return null;
@@ -151,7 +151,7 @@ namespace DiscordBot.Utilities.Calculator
         }
 
         // Could be optimized by running it only one time and then storing the values in just one list, and get the index from that
-        static int? FindIndexToSearch(List<Expression> list)
+        private static int? FindIndexToSearch(List<Expression> list)
         {
             List<int> multiplicationIndexes = new List<int>();
             List<int> additiveIndexes = new List<int>();

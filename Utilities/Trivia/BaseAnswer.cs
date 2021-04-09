@@ -3,13 +3,19 @@
     [System.Serializable]
     public class BaseAnswer
     {
-        public string Content { get; private set; }
-        public bool IsCorrect { get; private set; }
+        public string Content { get; set; }
+        public bool IsCorrect { get; set; }
 
         public BaseAnswer(string content, bool isCorrect)
         {
             Content = content;
             IsCorrect = isCorrect;
+        }
+
+        public BaseAnswer()
+        {
+            Content = "";
+            IsCorrect = false;
         }
     }
 }

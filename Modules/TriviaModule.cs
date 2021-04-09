@@ -1,17 +1,17 @@
-﻿using Discord.Commands;
+﻿using Discord;
+using Discord.Commands;
+using DiscordBot.Utilities.Managers.Storage;
 using DiscordBot.Utilities.Trivia;
 using System;
-using System.Timers;
 using System.Threading.Tasks;
-using Discord;
-using DiscordBot.Utilities.Managers.Storage;
+using System.Timers;
 
 namespace DiscordBot.Modules
 {
     [Group("trivia")]
     public class TriviaModule : ModuleBase<SocketCommandContext>
     {
-        [Command] 
+        [Command]
         public async Task Trivia([Remainder][Summary("The theme")] string theme = "")
         {
             await Task.Run(async () =>
@@ -24,16 +24,16 @@ namespace DiscordBot.Modules
                 var r = base.ReplyAsync(embed: triviaController.GetQuestionEmbed()).Result;
 
                 triviaController.SetMessage(r);
-                await triviaController.HandleReactionsAsync();                              
+                await triviaController.HandleReactionsAsync();
                 Context.Client.ReactionAdded += triviaController.HandleReactionAdded;
 
                 Timer t = new Timer
                 {
-                    Interval = 10000, 
-                    AutoReset = false 
+                    Interval = 10000,
+                    AutoReset = false
                 };
 
-                t.Elapsed += new ElapsedEventHandler(async (object sender, ElapsedEventArgs e) => 
+                t.Elapsed += new ElapsedEventHandler(async (object sender, ElapsedEventArgs e) =>
                 {
                     Context.Client.ReactionAdded -= triviaController.HandleReactionAdded;
                     t.Dispose();
@@ -41,11 +41,11 @@ namespace DiscordBot.Modules
                 });
                 t.Start();
             });
-        }  
+        }
 
         [Command("get user")]
         [Alias("gu", "user")]
-        public async Task GetUserInfo(IUser user) 
+        public async Task GetUserInfo(IUser user)
         {
             EmbedBuilder embed = new EmbedBuilder()
             {

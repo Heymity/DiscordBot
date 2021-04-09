@@ -9,7 +9,7 @@ namespace DiscordBot.Utilities.Trivia
         public List<BaseQuestion> questions;
         public bool shouldStoreScores;
         public Dictionary<ulong, int> usersScores;
-        
+
         public TriviaData(bool _shoudStoreScores, List<BaseQuestion> questions = null)
         {
             this.questions = questions != null ? new List<BaseQuestion>(questions) : new List<BaseQuestion>();

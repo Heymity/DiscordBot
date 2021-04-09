@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace DiscordBot.Utilities.Managers.Data
 {
     [System.Serializable]
-    public class GuildDataManager 
+    public class GuildDataManager
     {
         public ulong Id { get; set; }
         public Dictionary<ulong, ChannelDataManager> ChannelsData { get; private set; }

@@ -119,21 +119,25 @@ namespace DiscordBot.Utilities.Managers.Storage
 
             Console.WriteLine(files[0]);
 
+            var options = new JsonSerializerOptions()
+            {
+                WriteIndented = true,
+                PropertyNameCaseInsensitive = true
+            };
+
             foreach (string filePath in files)
             {
                 if (Path.GetExtension(filePath) == ".json")
                 {
                     var value = File.ReadAllText(filePath);
 
-                    var questions = JsonSerializer.Deserialize(value, typeof(List<BaseQuestion>)) as List<BaseQuestion>;
+                    var questions = JsonSerializer.Deserialize(value, typeof(List<BaseQuestion>), options) as List<BaseQuestion>;
 
-                    foreach(var question in questions)
+                    foreach (var question in questions)
                     {
-                        if (!GeneralTriviaData.questions.Contains(question))
+                        if (GeneralTriviaData.questions.Find(x => x.Content == question.Content) == null)
                             GeneralTriviaData.questions.Add(question);
                     }
-
-                    Console.WriteLine(questions.Count);
                 }
             }
         }
@@ -144,7 +148,8 @@ namespace DiscordBot.Utilities.Managers.Storage
 
             var options = new JsonSerializerOptions()
             {
-                WriteIndented = true
+                WriteIndented = true,
+                PropertyNameCaseInsensitive = true
             };
 
             var value = JsonSerializer.Serialize(questions, options);

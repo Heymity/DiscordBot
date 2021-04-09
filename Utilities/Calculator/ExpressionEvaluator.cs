@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 namespace DiscordBot.Utilities.Calculator
 {
-    static class ExpressionEvaluator
+    internal static class ExpressionEvaluator
     {
         public static string Evaluate(Expression exp)
         {
             List<Expression> symbols = exp.parsedExpression;
             for (int i = 0; i < symbols.Count; i++)
             {
-                if (symbols[i].type == SymbolType.Expression) 
-                    symbols[i].SetValue(Evaluate(symbols[i]), SymbolType.Number);                       
+                if (symbols[i].type == SymbolType.Expression)
+                    symbols[i].SetValue(Evaluate(symbols[i]), SymbolType.Number);
             }
 
             if (exp.parsedExpression.Count == 1) return exp.parsedExpression[0].Value;
@@ -20,7 +20,7 @@ namespace DiscordBot.Utilities.Calculator
             return h;
         }
 
-        static string HandleSolve(Expression first, Expression opt, Expression second)
+        private static string HandleSolve(Expression first, Expression opt, Expression second)
         {
             double firstNum = double.Parse(first.Value.Replace('.', ','));
             double secondNum = double.Parse(second.Value.Replace('.', ','));

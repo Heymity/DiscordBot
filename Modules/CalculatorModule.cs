@@ -1,8 +1,8 @@
-﻿using Discord.Commands;
-using System.Threading.Tasks;
+﻿using Discord;
+using Discord.Commands;
 using DiscordBot.Utilities.Calculator;
-using Discord;
 using System;
+using System.Threading.Tasks;
 
 namespace DiscordBot.Modules
 {
@@ -19,13 +19,13 @@ namespace DiscordBot.Modules
 
                 a.ModifyAsync((MessageProperties prop) => prop.Content = CalculatorLogic.SolveExpression(expression));
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 ReplyAsync($"Error: {e.Message}");
             }
             return Task.CompletedTask;
         }
-        
+
         [Command("add")]
         [Alias("+", "a", "soma", "sum")]
         public Task Add(params double[] numbers) => ReplyAsync(CalculatorLogic.Add(numbers).ToString());

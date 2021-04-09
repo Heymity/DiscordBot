@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace DiscordBot.Utilities.Calculator
 {
-    class CalculatorLogic
+    internal class CalculatorLogic
     {
         public static double Add(params double[] numbers)
         {
@@ -68,7 +67,5 @@ namespace DiscordBot.Utilities.Calculator
             exp.Evaluate();
             return double.Parse(exp.Value);
         }
-
     }
-        
 }

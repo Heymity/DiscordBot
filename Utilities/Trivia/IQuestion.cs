@@ -6,9 +6,9 @@ namespace DiscordBot.Utilities.Trivia
     {
         public int Points { get; set; }
 
-        public string GetQuestion { get; }
+        public string GetQuestion();
 
-        public IReadOnlyList<T> GetAnswers { get; }
+        public IReadOnlyList<T> GetAnswers();
 
         T GetCorrectAnswer();
 

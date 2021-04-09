@@ -1,247 +1,54 @@
 [
   {
-    "Content": "This is a question",
+    "Content": "This is a not a Real Question",
     "Answers": [
       {
-        "Content": "This is the correct alternative A",
+        "Content": "This is the correct alternative A, or is it?",
         "IsCorrect": true
       },
       {
-        "Content": "This is the alternative B",
+        "Content": "This is the alternative B, is it correct?",
         "IsCorrect": false
       },
       {
-        "Content": "This is the alternative C",
+        "Content": "This is the alternative C, don't fell like it's right",
         "IsCorrect": false
       },
       {
-        "Content": "This is the alternative D",
+        "Content": "This is the alternative D, no no no, not this one",
         "IsCorrect": false
       },
       {
-        "Content": "This is the alternative E",
+        "Content": "This is the alternative E, might be",
         "IsCorrect": false
       }
     ],
-    "Points": 1,
-    "GetQuestion": "This is a question",
-    "GetAnswers": [
-      {
-        "Content": "This is the correct alternative A",
-        "IsCorrect": true
-      },
-      {
-        "Content": "This is the alternative B",
-        "IsCorrect": false
-      },
-      {
-        "Content": "This is the alternative C",
-        "IsCorrect": false
-      },
-      {
-        "Content": "This is the alternative D",
-        "IsCorrect": false
-      },
-      {
-        "Content": "This is the alternative E",
-        "IsCorrect": false
-      }
-    ]
+    "Points": 2
   },
   {
-    "Content": "This is a question",
+    "Content": "What is a planet",
     "Answers": [
       {
-        "Content": "This is the alternative A",
+        "Content": "idk",
         "IsCorrect": false
       },
       {
-        "Content": "This is the correct alternative B",
+        "Content": "a rocky sphere",
         "IsCorrect": true
       },
       {
-        "Content": "This is the alternative C",
+        "Content": "a round thing",
         "IsCorrect": false
       },
       {
-        "Content": "This is the alternative D",
+        "Content": "a globe",
         "IsCorrect": false
       },
       {
-        "Content": "This is the alternative E",
+        "Content": "I run out of ideas",
         "IsCorrect": false
       }
     ],
-    "Points": 1,
-    "GetQuestion": "This is a question",
-    "GetAnswers": [
-      {
-        "Content": "This is the alternative A",
-        "IsCorrect": false
-      },
-      {
-        "Content": "This is the correct alternative B",
-        "IsCorrect": true
-      },
-      {
-        "Content": "This is the alternative C",
-        "IsCorrect": false
-      },
-      {
-        "Content": "This is the alternative D",
-        "IsCorrect": false
-      },
-      {
-        "Content": "This is the alternative E",
-        "IsCorrect": false
-      }
-    ]
-  },
-  {
-    "Content": "This is a question",
-    "Answers": [
-      {
-        "Content": "This is the alternative A",
-        "IsCorrect": false
-      },
-      {
-        "Content": "This is the alternative B",
-        "IsCorrect": false
-      },
-      {
-        "Content": "This is the correctalt ernative C",
-        "IsCorrect": true
-      },
-      {
-        "Content": "This is the alternative D",
-        "IsCorrect": false
-      },
-      {
-        "Content": "This is the alternative E",
-        "IsCorrect": false
-      }
-    ],
-    "Points": 1,
-    "GetQuestion": "This is a question",
-    "GetAnswers": [
-      {
-        "Content": "This is the alternative A",
-        "IsCorrect": false
-      },
-      {
-        "Content": "This is the alternative B",
-        "IsCorrect": false
-      },
-      {
-        "Content": "This is the correctalt ernative C",
-        "IsCorrect": true
-      },
-      {
-        "Content": "This is the alternative D",
-        "IsCorrect": false
-      },
-      {
-        "Content": "This is the alternative E",
-        "IsCorrect": false
-      }
-    ]
-  },
-  {
-    "Content": "This is a question",
-    "Answers": [
-      {
-        "Content": "This is the alternative A",
-        "IsCorrect": false
-      },
-      {
-        "Content": "This is the alternative B",
-        "IsCorrect": false
-      },
-      {
-        "Content": "This is the alternative C",
-        "IsCorrect": false
-      },
-      {
-        "Content": "This is the correct alternative D",
-        "IsCorrect": true
-      },
-      {
-        "Content": "This is the alternative E",
-        "IsCorrect": false
-      }
-    ],
-    "Points": 1,
-    "GetQuestion": "This is a question",
-    "GetAnswers": [
-      {
-        "Content": "This is the alternative A",
-        "IsCorrect": false
-      },
-      {
-        "Content": "This is the alternative B",
-        "IsCorrect": false
-      },
-      {
-        "Content": "This is the alternative C",
-        "IsCorrect": false
-      },
-      {
-        "Content": "This is the correct alternative D",
-        "IsCorrect": true
-      },
-      {
-        "Content": "This is the alternative E",
-        "IsCorrect": false
-      }
-    ]
-  },
-  {
-    "Content": "This is a question",
-    "Answers": [
-      {
-        "Content": "This is the alternative A",
-        "IsCorrect": false
-      },
-      {
-        "Content": "This is the alternative B",
-        "IsCorrect": false
-      },
-      {
-        "Content": "This is the alternative C",
-        "IsCorrect": false
-      },
-      {
-        "Content": "This is the alternative D",
-        "IsCorrect": false
-      },
-      {
-        "Content": "This is the correct alternative E",
-        "IsCorrect": true
-      }
-    ],
-    "Points": 1,
-    "GetQuestion": "This is a question",
-    "GetAnswers": [
-      {
-        "Content": "This is the alternative A",
-        "IsCorrect": false
-      },
-      {
-        "Content": "This is the alternative B",
-        "IsCorrect": false
-      },
-      {
-        "Content": "This is the alternative C",
-        "IsCorrect": false
-      },
-      {
-        "Content": "This is the alternative D",
-        "IsCorrect": false
-      },
-      {
-        "Content": "This is the correct alternative E",
-        "IsCorrect": true
-      }
-    ]
+    "Points": 1
   }
 ]
