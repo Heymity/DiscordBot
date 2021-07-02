@@ -1,9 +1,12 @@
 ﻿using Discord;
 using Discord.Commands;
+using Discord.WebSocket;
 using DiscordBot.Utilities;
 using DiscordBot.Utilities.Managers.Storage;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace DiscordBot.Modules
@@ -17,7 +20,7 @@ namespace DiscordBot.Modules
             => ReplyAsync(echo);
 
         [Command("get quote")]
-        [Alias("gq", "frase aleatoria", "fr", "random quote", "rq")]
+        [Alias("gq", "frase aleatoria", "fa", "random quote", "rq")]
         [Summary("Gets random quote")]
         public async Task GetQuoteAsync([Summary("Tags")] params string[] tags)
         {
@@ -46,6 +49,7 @@ namespace DiscordBot.Modules
         }
 
         [Command("save")]
+        [Summary("Saves the current bot data, only the bot admin can issue it")]
         public async Task Save()
         {
             if (Context.Message.Author.Id != 226473285213224963) return;
@@ -56,6 +60,7 @@ namespace DiscordBot.Modules
         }
 
         [Command("load")]
+        [Summary("Loads the bot data from its save, only the bot admin can issue it")]
         public async Task Load()
         {
             if (Context.Message.Author.Id != 226473285213224963) return;
@@ -63,6 +68,63 @@ namespace DiscordBot.Modules
             Console.WriteLine(Context.Message.Author.Id);
             await ReplyAsync("Loading...");
             DataStorageManager.Current.LoadData();
+        }
+
+        [Command("change prefix")]
+        [Alias("cp")]
+        [Summary("Changes the bot command prefix for this server")]
+        public Task ChangePrefix([Summary("New Prefix")] char prefix)
+        {
+            var id = Context.Guild.Id;
+            DataStorageManager.Current[id].CommandPrefix = prefix;
+            AutoSaveManager.ReduceIntervalByChangePriority(ChangePriority.GuildDataChange);
+            return ReplyAsync($"The command prefix for this server is now {DataStorageManager.Current[id].CommandPrefix}");
+        }
+
+        ///TODO: Add the params to the help info.
+        [Command("help")]
+        [Summary("the help command. I think is very self explanatory.")]
+        public async Task HelpCommand()
+        {
+            var embed = new EmbedBuilder()
+            {
+                Title = "This is the list of all command for this bot",
+                Color = new Color(10, 180, 10)
+            };
+
+            var modules = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(ModuleBase<SocketCommandContext>))).ToList();
+
+            modules.ForEach(t =>
+            {
+                embed.Description += $"\n**{t.Name.Replace("Module", null).Replace("Modules", null)} Methods**";
+                var methods = t.GetMethods(BindingFlags.Public | BindingFlags.Instance).ToList();
+
+                var group = t.GetCustomAttribute<GroupAttribute>();
+
+                methods.ForEach(mi =>
+                {
+                    var summary = mi.GetCustomAttribute<SummaryAttribute>();
+                    var command = mi.GetCustomAttribute<CommandAttribute>();
+                    var aliases = mi.GetCustomAttribute<AliasAttribute>();
+                    var groupName = "";
+
+                    if (group != null) groupName = group.Prefix + " ";
+
+                    if (command == null) return;
+
+                    embed.Description += $"\n**{DataStorageManager.Current[Context.Guild.Id].CommandPrefix}{groupName}{command.Text}**";
+
+                    if (aliases != null)
+                        Array.ForEach(aliases.Aliases, action: a => embed.Description += $" or **{DataStorageManager.Current[Context.Guild.Id].CommandPrefix}{groupName}{(a == "**" ? "\\*\\*" : a)}**");
+
+                    if (summary != null)
+                        embed.Description += $"\n{summary.Text}";
+
+                    embed.Description += "\n";
+                });
+            });
+
+            await ReplyAsync(embed: embed.Build());
         }
 
         private string GetContent(string str)

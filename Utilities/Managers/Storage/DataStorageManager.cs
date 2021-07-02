@@ -93,7 +93,7 @@ namespace DiscordBot.Utilities.Managers.Storage
         {
             FileStream fs;
             if (!File.Exists("DataFile.dat")) fs = new FileStream("DataFile.dat", FileMode.Create);
-            fs = new FileStream("DataFile.dat", FileMode.Open);
+            else fs = new FileStream("DataFile.dat", FileMode.Open);
             try
             {
                 if (fs.Length == 0) return;

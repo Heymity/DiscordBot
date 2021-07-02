@@ -3,6 +3,7 @@ using Discord.WebSocket;
 using DiscordBot.Utilities.Managers.Storage;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DiscordBot.Utilities.Trivia
@@ -28,21 +29,18 @@ namespace DiscordBot.Utilities.Trivia
             UsersAnswers = new Dictionary<IUser, string>();
         }
 
-        public List<IUser> GetCorrectUsers(string correctAns)
+        public void SetMessage(IUserMessage message) => Message = message;
+
+        public List<IUser> ForEachUser(Func<IUser, string, bool> action)
         {
             List<IUser> users = new List<IUser>();
-            foreach (var e in UsersAnswers)
+            foreach(var userAns in UsersAnswers)
             {
-                if (e.Value == correctAns)
-                {
-                    users.Add(e.Key);
-                }
+                if (action.Invoke(userAns.Key, userAns.Value))
+                    users.Add(userAns.Key);
             }
-
             return users;
         }
-
-        public void SetMessage(IUserMessage message) => Message = message;
 
         public async Task HandleReactionsAsync()
         {
@@ -57,7 +55,7 @@ namespace DiscordBot.Utilities.Trivia
             {
                 if ((message.Value?.Id ?? Message.Id - 1) != Message.Id) return;
                 if (reaction.User.Value.IsBot) return;
-
+                 
                 Console.WriteLine("Reaction Added!");
 
                 var user = reaction.User.Value;
@@ -74,7 +72,11 @@ namespace DiscordBot.Utilities.Trivia
         {
             EmbedBuilder embed = new EmbedBuilder()
             {
-                Title = Question.GetQuestion()
+                Title = Question.GetQuestion(),
+                Footer = new EmbedFooterBuilder()
+                {
+                    Text = $"Value: {Question.Points} {(Question.Points == 1 ? "point" : "points")}"
+                }
             };
 
             string[] ansLetters = new string[] { "A:", "B:", "C:", "D:", "E:" };
@@ -90,20 +92,28 @@ namespace DiscordBot.Utilities.Trivia
         public Embed WhenTimeout()
         {
             Console.WriteLine("Time Out!");
-            var correctUsers = GetCorrectUsers(reactions[Question.GetCorrectAnswerIndex()].Name);
 
             EmbedBuilder embed = new EmbedBuilder()
             {
                 Title = $"The right answer was {reactions[Question.GetCorrectAnswerIndex()].Name}"
             };
 
-            correctUsers.ForEach((IUser user) =>
+            var correctUsers = ForEachUser((user, ans) => 
             {
-                var score = DataStorageManager.Current.GetOrCreateGuild(Guild.Id).GuildTriviaData.AddScore(user, Question.Points);
+                if (ans == reactions[Question.GetCorrectAnswerIndex()].Name)
+                {
+                    var score = DataStorageManager.Current[Guild.Id].GuildTriviaData.QuestionSolved(user, true, Question.Points).score;
+                    embed.Description += $" - **{user.Username}** ({score} points)\n";
+                    return true;
+                }
+                else
+                {
+                    var score = DataStorageManager.Current[Guild.Id].GuildTriviaData.QuestionSolved(user, false, Question.Points).score;
+                }
 
-                embed.Description += $" - **{user.Username}** ({score} points)\n";
+                return false;
             });
-            embed.Description += correctUsers.Count == 0 ? "No one got it right" : "got it right!";
+            embed.Description += correctUsers.Any() ? "got it right!" : "No one got it right";
 
             AutoSaveManager.ReduceIntervalByChangePriority(ChangePriority.UserDataChange);
 

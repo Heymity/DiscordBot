@@ -1,13 +1,12 @@
 ﻿#define DEBUG
 //#undef DEBUG
-
+#undef DEFAULTDIR
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using DiscordBot.Commands;
 using DiscordBot.Logging;
 using DiscordBot.Utilities.Managers.Storage;
-using DiscordBot.Utilities.Trivia;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -21,7 +20,7 @@ namespace DiscordBot
 #if DEFAULTDIR
         public const string DIRECTORY = "C:/Users/GABRIEL/Desktop/LangFiles/C#/DiscordBot/DiscordBot";
 #else
-		public const string DIRECTORY = "";
+		public const string DIRECTORY = "D:/Gabriel/LangFiles/DiscordBot/DiscordBot";
 #endif
         private readonly string tokenDir = $"{DIRECTORY}/Token.txt";
 

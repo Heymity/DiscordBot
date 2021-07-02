@@ -1,5 +1,6 @@
 ﻿using Discord.Commands;
 using Discord.WebSocket;
+using DiscordBot.Utilities.Managers.Storage;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -40,11 +41,18 @@ namespace DiscordBot.Commands
             var message = messageParam as SocketUserMessage;
             if (message == null) return;
 
+            // Getting the Guild to fetch the command prefix
+            var chnl = message.Channel as SocketGuildChannel;
+            var guild = chnl.Guild.Id;
+
+            // Fetching the prefix
+            var prefix = DataStorageManager.Current[guild].CommandPrefix;
+
             // Create a number to track where the prefix ends and the command begins
             int argPos = 0;
 
             // Determine if the message is a command based on the prefix and make sure no bots trigger commands
-            if (!(message.HasCharPrefix('!', ref argPos) ||
+            if (!(message.HasCharPrefix(prefix, ref argPos) ||
                 message.HasMentionPrefix(_client.CurrentUser, ref argPos)) ||
                 message.Author.IsBot)
                 return;

@@ -19,7 +19,7 @@ namespace DiscordBot.Modules
                 TriviaController<BaseAnswer> triviaController = new TriviaController<BaseAnswer>(Context.Guild);
                 triviaController.GetRandomQuestion();
 
-                if (triviaController.Question.GetAnswersLenght() > 5) throw new Exception("The Question can only have up to 5 answers because I dind't find a way to generalize the emoji creation ;)");
+                if (triviaController.Question.GetAnswersLenght() > 5) throw new Exception("The Question can only have up to 5 answers because I dind't find a way to generalize the emoji creation for the reactions yet ;)");
 
                 var r = base.ReplyAsync(embed: triviaController.GetQuestionEmbed()).Result;
 
@@ -47,11 +47,27 @@ namespace DiscordBot.Modules
         [Alias("gu", "user")]
         public async Task GetUserInfo(IUser user)
         {
-            EmbedBuilder embed = new EmbedBuilder()
+            var userData = DataStorageManager.Current[Context.Guild.Id].GuildTriviaData.GetUserData(user.Id);
+
+            EmbedBuilder embed;
+
+            if (userData != null)
             {
-                Title = $"{user.Username} trivia profile",
-                Description = $"{DataStorageManager.Current[Context.Guild.Id].GuildTriviaData.GetUserScore(user.Id)} points"
-            };
+                embed = new EmbedBuilder()
+                {
+                    Title = $"{user.Username} trivia profile",
+                    Description = $"{user.Username} has {userData.score} points with a correct answer rate of {((float)userData.answeredCorrectly / (userData.answered == 0 ? 1 : userData.answered)) * 100}%, answering a total of {userData.answered} questions, being {userData.answeredCorrectly} of those correctly answered.",
+                };
+            }
+            else
+            {
+                embed = new EmbedBuilder()
+                {
+                    Title = $"The user {user.Username} has not answered a trivia question in this server yet.",
+                    Description = "what a shame"
+                };
+            }
+
             await ReplyAsync(embed: embed.Build());
         }
     }

@@ -7,6 +7,9 @@ namespace DiscordBot.Utilities.Managers.Data
     public class GuildDataManager
     {
         public ulong Id { get; set; }
+
+        private char commandPrefix = '!';
+        public char CommandPrefix { get => commandPrefix == '\0' ? '!' : commandPrefix; set => commandPrefix = value; }
         public Dictionary<ulong, ChannelDataManager> ChannelsData { get; private set; }
         public TriviaData<BaseAnswer> GuildTriviaData { get; set; }
 

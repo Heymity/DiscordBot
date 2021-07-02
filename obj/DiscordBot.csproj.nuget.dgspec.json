@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\GABRIEL\\Desktop\\LangFiles\\C#\\DiscordBot\\DiscordBot\\DiscordBot.csproj": {}
+    "D:\\Gabriel\\LangFiles\\DiscordBot\\DiscordBot\\DiscordBot.csproj": {}
   },
   "projects": {
-    "C:\\Users\\GABRIEL\\Desktop\\LangFiles\\C#\\DiscordBot\\DiscordBot\\DiscordBot.csproj": {
+    "D:\\Gabriel\\LangFiles\\DiscordBot\\DiscordBot\\DiscordBot.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\GABRIEL\\Desktop\\LangFiles\\C#\\DiscordBot\\DiscordBot\\DiscordBot.csproj",
+        "projectUniqueName": "D:\\Gabriel\\LangFiles\\DiscordBot\\DiscordBot\\DiscordBot.csproj",
         "projectName": "DiscordBot",
-        "projectPath": "C:\\Users\\GABRIEL\\Desktop\\LangFiles\\C#\\DiscordBot\\DiscordBot\\DiscordBot.csproj",
-        "packagesPath": "C:\\Users\\GABRIEL\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\GABRIEL\\Desktop\\LangFiles\\C#\\DiscordBot\\DiscordBot\\obj\\",
+        "projectPath": "D:\\Gabriel\\LangFiles\\DiscordBot\\DiscordBot\\DiscordBot.csproj",
+        "packagesPath": "C:\\Users\\gabri\\.nuget\\packages\\",
+        "outputPath": "D:\\Gabriel\\LangFiles\\DiscordBot\\DiscordBot\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\VisualStudio\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\GABRIEL\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\gabri\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -26,6 +30,7 @@
         },
         "frameworks": {
           "netcoreapp3.1": {
+            "targetAlias": "netcoreapp3.1",
             "projectReferences": {}
           }
         },
@@ -37,6 +42,7 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
           "dependencies": {
             "Discord.Net": {
               "target": "Package",
@@ -58,7 +64,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.402\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.201\\RuntimeIdentifierGraph.json"
         }
       }
     }
