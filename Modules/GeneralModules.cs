@@ -4,6 +4,7 @@ using Discord.WebSocket;
 using DiscordBot.Utilities;
 using DiscordBot.Utilities.Managers.Storage;
 using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -84,45 +85,53 @@ namespace DiscordBot.Modules
         ///TODO: Add the params to the help info.
         [Command("help")]
         [Summary("the help command. I think is very self explanatory.")]
-        public async Task HelpCommand()
+        public async Task HelpCommand([Remainder] string command = "")
         {
             var embed = new EmbedBuilder()
             {
-                Title = "This is the list of all command for this bot",
+                Title = "This is the list of all commands for this bot",
                 Color = new Color(10, 180, 10)
             };
 
             var modules = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(ModuleBase<SocketCommandContext>))).ToList();
 
+            var description = new StringBuilder();
+            description.AppendLine();
+
             modules.ForEach(t =>
             {
-                embed.Description += $"\n**{t.Name.Replace("Module", null).Replace("Modules", null)} Methods**";
+                var moduleName = t.Name.Remove(t.Name.IndexOf("Module"));
+                description.AppendLine($"**{moduleName} Commands**");
+             
                 var methods = t.GetMethods(BindingFlags.Public | BindingFlags.Instance).ToList();
 
                 var group = t.GetCustomAttribute<GroupAttribute>();
 
                 methods.ForEach(mi =>
                 {
-                    var summary = mi.GetCustomAttribute<SummaryAttribute>();
                     var command = mi.GetCustomAttribute<CommandAttribute>();
+                    if (command == null) return;
+
+                    var summary = mi.GetCustomAttribute<SummaryAttribute>();
                     var aliases = mi.GetCustomAttribute<AliasAttribute>();
                     var groupName = "";
+                    var commandPrefix = DataStorageManager.Current[Context.Guild.Id].CommandPrefix;
 
                     if (group != null) groupName = group.Prefix + " ";
 
-                    if (command == null) return;
-
-                    embed.Description += $"\n**{DataStorageManager.Current[Context.Guild.Id].CommandPrefix}{groupName}{command.Text}**";
+                    description.Append($"**{commandPrefix}{groupName}{command.Text}**");
 
                     if (aliases != null)
-                        Array.ForEach(aliases.Aliases, action: a => embed.Description += $" or **{DataStorageManager.Current[Context.Guild.Id].CommandPrefix}{groupName}{(a == "**" ? "\\*\\*" : a)}**");
+                        Array.ForEach(aliases.Aliases, a => description.Append($" or **{commandPrefix}{groupName}{(a == "**" ? "\\*\\*" : a)}**"));
 
                     if (summary != null)
-                        embed.Description += $"\n{summary.Text}";
+                        description.Append($"\n{summary.Text}");
 
-                    embed.Description += "\n";
+                    description.AppendLine("\n");
                 });
             });
+
+            embed.Description = description.ToString();
 
             await ReplyAsync(embed: embed.Build());
         }

@@ -2,6 +2,7 @@
 //#undef DEBUG
 #undef DEFAULTDIR
 using Discord;
+using Discord.Audio;
 using Discord.Commands;
 using Discord.WebSocket;
 using DiscordBot.Commands;
@@ -9,6 +10,7 @@ using DiscordBot.Logging;
 using DiscordBot.Utilities.Managers.Storage;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 //using DiscordBot.Utilities.Trivia;
@@ -34,6 +36,19 @@ namespace DiscordBot
 
         public async Task MainAsync()
         {
+            await Login();
+
+            client.Ready += WhenReady;
+
+            DataStorageManager.Current.LoadData();
+            DataStorageManager.Current.LoadNewQuestionsFromJson();
+
+            // Block this task until the program is closed.
+            await Task.Delay(-1);
+        }
+
+        private async Task Login()
+        {
             client = new DiscordSocketClient(new DiscordSocketConfig { MessageCacheSize = 100 });
             commandService = new CommandService();
             loggingService = new LoggingService(client, commandService);
@@ -48,18 +63,28 @@ namespace DiscordBot
             client.MessageUpdated += MessageUpdated;
             client.MessageReceived += MessageReceived;
 #endif
-            client.Ready += () =>
+        }
+
+        private async Task WhenReady()
+        {
+            Console.WriteLine("Bot is connected!");
+
+            IVoiceChannel channel;
+            while (true)
             {
-                Console.WriteLine("Bot is connected!");
-                client.SetGameAsync("o henrique pela janela");
-                return Task.CompletedTask;
-            };
+                try
+                {
+                    channel = client.Guilds.First().VoiceChannels.First();
+                    break;
+                }
+                catch (InvalidOperationException) { }
+            }
+            IAudioClient audioClient = await channel.ConnectAsync();
+            AudioOutStream stream = audioClient.CreateOpusStream();
 
-            DataStorageManager.Current.LoadData();
-            DataStorageManager.Current.LoadNewQuestionsFromJson();
+            stream.Write(new byte[1000], 0, 1000);
 
-            // Block this task until the program is closed.
-            await Task.Delay(-1);
+            await client.SetGameAsync("o henrique pela janela");
         }
 
 #if DEBUG

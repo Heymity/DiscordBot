@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace DiscordBot.Utilities.Calculator
 {
+    /// TODO: Fix implicit multiplication, expressions like !calc 5 + 5(4 / 2)^4 dont work because it first multiplies y 5 and then power to 4
     internal static class ExpressionParser
     {
         public static readonly List<char> openingGroupChars = new List<char>() { '(', '[', '{' };

@@ -12,6 +12,7 @@ namespace DiscordBot.Modules
     public class TriviaModule : ModuleBase<SocketCommandContext>
     {
         [Command]
+        [Summary("Gives a random question form the bot's database for the users to awnser and accumulate points.")]
         public async Task Trivia([Remainder][Summary("The theme")] string theme = "")
         {
             await Task.Run(async () =>
@@ -45,6 +46,7 @@ namespace DiscordBot.Modules
 
         [Command("get user")]
         [Alias("gu", "user")]
+        [Summary("Returns the user profile for the trivia, giving its points and some stats.")]
         public async Task GetUserInfo(IUser user)
         {
             var userData = DataStorageManager.Current[Context.Guild.Id].GuildTriviaData.GetUserData(user.Id);
